@@ -1,0 +1,35 @@
+{
+  "name": "barbershop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "rm -rf build && next build && mkdir build && cp -r .next build/",
+    "start": "cp -r build/.next .next && next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^4.1.1",
+    "@tailwindcss/postcss": "^4.0.7",
+    "init": "^0.1.2",
+    "lucide-react": "^0.475.0",
+    "next": "15.1.7",
+    "postcss": "^8.5.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "react-icons": "^5.5.0",
+    "tailwind-merge": "^3.0.1",
+    "tailwind-scrollbar-hide": "^2.0.0",
+    "tailwindcss": "^4.0.7",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "orval": "^7.5.0",
+    "typescript": "^5"
+  }
+}

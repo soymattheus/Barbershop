@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@theme {
+  --color-*: initial;
+
+  --color-primary: #0077b6;
+  --color-secondary: #f8f9fa;
+  --color-text: #212529;
+  --color-emphasis: #ffcc00;
+  --color-white: #ffffff;
+  --color-blue: #e7f5ff;
+  --color-gray-1: #dee2e6;
+  --color-gray-2: #e9ecef;
+
+  --color-danger: #f05d6c;
+
+  --color-gray-100: #dae4f2;
+  --color-gray-200: #c8d0da;
+  --color-gray-300: #95a1b1;
+  --color-gray-400: #6f7d90;
+  --color-gray-500: #2a313c;
+  --color-gray-600: #21252c;
+  --color-gray-700: #191d24;
+  --color-gray-800: #13161b;
+  --color-gray-900: #0f1216;
+
+  --font-heading: var(--font-oxanium);
+  --font-sans: var(--font-montserrat);
+
+  --radius-xl: 0.625rem;
+}
