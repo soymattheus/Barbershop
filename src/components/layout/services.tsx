@@ -185,16 +185,6 @@ export default function Services() {
     },
   ]
 
-  type Service = {
-    name: string
-    description: string
-  }
-
-  type Category = {
-    title: string
-    services: Service[]
-  }
-
   function filterCategory(categoryTitle: string): void {
     const category = services.find(
       cat => cat.title.toLowerCase() === categoryTitle.toLowerCase()
