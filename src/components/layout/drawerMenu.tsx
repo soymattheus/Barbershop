@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  BookmarkCheck,
-  Image,
-  Images,
-  LogOut,
-  UserCircle,
-  Users,
-} from 'lucide-react'
+import { BookmarkCheck, Images, LogOut, UserCircle, Users } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface DrawerMenuProps {

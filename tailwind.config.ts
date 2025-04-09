@@ -7,4 +7,5 @@ export default {
     // ...
   },
   plugins: [scrollbarHide],
+  content: ['./node_modules/react-datepicker/dist/react-datepicker.css'],
 } satisfies Config
