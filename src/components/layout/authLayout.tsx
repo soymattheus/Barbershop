@@ -110,7 +110,7 @@ export default function AuthLayout({ children }: DrawerProps) {
         </aside>
 
         <div
-          className={`flex flex-col flex-1 gap-4 md:gap-8 transition-all duration-300 bg-blue
+          className={`flex flex-col flex-1 gap-4 md:gap-8 transition-all duration-300
         ${isOpen ? 'w-8/12 md:w-5/6' : 'w-full'}`}
         >
           {/* Header */}
