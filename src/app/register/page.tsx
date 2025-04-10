@@ -27,43 +27,49 @@ export default function Login() {
 
         {/* E-mail */}
         <div className="flex flex-col w-full md:w-1/2 gap-2 items-start">
-          <label htmlFor="email" className="text-white">
-            E-mail{' '}
+          <label htmlFor="email" className="text-sm font-semibold text-white">
+            E-mail:
           </label>
           <input
-            type="email"
+            type="text"
             name="email"
             id="email"
             placeholder="example@emial.com"
-            className="border rounded-sm px-2 w-full"
+            // value="Matheus Tavares"
+            onChange={() => {}}
+            className="p-2 rounded-md border border-white w-full"
           />
         </div>
 
         {/* Password */}
         <div className="flex flex-col w-full md:w-1/2 gap-2 items-start">
           <label htmlFor="password" className="text-white">
-            Password{' '}
+            Password:
           </label>
           <input
             type="password"
             name="password"
             id="password"
-            placeholder="create your password"
-            className="border rounded-sm px-2 w-full"
+            placeholder="Enter your password"
+            // value="Matheus Tavares"
+            onChange={() => {}}
+            className="p-2 rounded-md border border-white w-full"
           />
         </div>
 
         {/* Confirm password */}
         <div className="flex flex-col w-full md:w-1/2 gap-2 items-start">
           <label htmlFor="confirmPassword" className="text-white">
-            Confirm Password{' '}
+            Confirm Password:
           </label>
           <input
             type="password"
             name="confirmPassword"
             id="confirmPassword"
-            placeholder="Confirm your password"
-            className="border rounded-sm px-2 w-full"
+            placeholder="Enter your password"
+            // value="Matheus Tavares"
+            onChange={() => {}}
+            className="p-2 rounded-md border border-white w-full"
           />
         </div>
 

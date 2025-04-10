@@ -4,6 +4,8 @@ import Footer from '@/components/layout/footer'
 import {
   ArrowLeft,
   BookmarkCheck,
+  Coins,
+  Home,
   Images,
   LogOut,
   Menu,
@@ -19,11 +21,12 @@ interface DrawerProps {
   children?: React.ReactNode
 }
 
-export default function DrawerTest({ children }: DrawerProps) {
+export default function AuthLayout({ children }: DrawerProps) {
   const router = useRouter()
   const pathname = usePathname()
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
+  const [userName, setUserName] = React.useState<string>('Matheus Tavares')
 
   const handleProfile = () => {
     router.push('/profile')
@@ -31,6 +34,14 @@ export default function DrawerTest({ children }: DrawerProps) {
 
   const handleExit = () => {
     router.push('/')
+  }
+
+  const handleBooking = () => {
+    router.push('/booking')
+  }
+
+  const handleHomeUser = () => {
+    router.push('/homeUser')
   }
 
   return (
@@ -42,12 +53,12 @@ export default function DrawerTest({ children }: DrawerProps) {
         >
           <div>
             <button
+              onClick={handleHomeUser}
               type="button"
-              onClick={handleProfile}
-              className="flex flex-row w-full gap-1 cursor-pointer"
+              className="flex flex-row cursor-pointer gap-0.5"
             >
-              <UserCircle className="size-6" />
-              <p>Profile</p>
+              <Home />
+              Home
             </button>
 
             <hr className="my-3" />
@@ -55,11 +66,13 @@ export default function DrawerTest({ children }: DrawerProps) {
             <div className="flex flex-col w-full gap-3 items-start">
               <button
                 type="button"
-                className="flex flex-row cursor-pointer gap-0.5"
+                onClick={handleProfile}
+                className="flex flex-row w-full gap-1 cursor-pointer"
               >
-                <BookmarkCheck />
-                Bookings
+                <UserCircle className="size-6" />
+                <p>Profile</p>
               </button>
+
               <button
                 type="button"
                 className="flex flex-row cursor-pointer gap-0.5"
@@ -67,6 +80,15 @@ export default function DrawerTest({ children }: DrawerProps) {
                 <Images />
                 Galery
               </button>
+
+              <button
+                type="button"
+                className="flex flex-row cursor-pointer gap-0.5"
+              >
+                <Coins />
+                Loyalty Packages
+              </button>
+
               <button
                 type="button"
                 className="flex flex-row cursor-pointer gap-0.5"
@@ -74,6 +96,7 @@ export default function DrawerTest({ children }: DrawerProps) {
                 <Users />
                 About us
               </button>
+
               <button
                 type="button"
                 onClick={handleExit}
@@ -92,21 +115,26 @@ export default function DrawerTest({ children }: DrawerProps) {
         >
           {/* Header */}
           <div className="flex flex-row w-full items-center justify-between h-14 gap-8 px-6 py-2 bg-primary">
-            <IconButton onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? <ArrowLeft /> : <Menu />}
-            </IconButton>
+            <div className="flex flex-row items-center gap-2">
+              <IconButton onClick={() => setIsOpen(!isOpen)}>
+                {isOpen ? <ArrowLeft /> : <Menu />}
+              </IconButton>
+              <p className="font-semibold">{userName}</p>
+            </div>
 
             {pathname !== '/booking' && (
               <div
                 className={`flex items-center ${!isOpen ? 'block' : 'hidden md:block'}`}
               >
-                <Button className="flex items-center">Book now</Button>
+                <Button onClick={handleBooking} className="flex items-center">
+                  Book now
+                </Button>
               </div>
             )}
           </div>
 
           {/* Main content */}
-          <div>{children}</div>
+          <div className="pb-4 md:pb-10">{children}</div>
         </div>
       </div>
 
