@@ -4,6 +4,7 @@ import AuthLayout from '@/components/layout/authLayout'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import { Button } from '@/components/ui/button'
+import Modal from '@/components/ui/modal'
 import Select from '@/components/ui/select'
 import React from 'react'
 import DatePicker from 'react-datepicker'
@@ -11,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 export default function Booking() {
   const [startDate, setStartDate] = React.useState<Date | null>(new Date())
+  const [isOpen, setIsOpen] = React.useState<boolean>(false)
 
   const services = [
     {
@@ -128,7 +130,7 @@ export default function Booking() {
           </div>
 
           <div className="flex flex-row w-full justify-center">
-            <Button>Book Now</Button>
+            <Button onClick={() => setIsOpen(true)}>Book Now</Button>
           </div>
 
           {/* Testimonials and Contact */}
@@ -141,6 +143,50 @@ export default function Booking() {
           </div>
         </div>
         {/* End body */}
+
+        <Modal
+          title="Booking Details"
+          onClose={() => setIsOpen(false)}
+          isOpen={isOpen}
+        >
+          <div className="flex flex-col w-full gap-2">
+            <hr className="text-gray-400 px-2" />
+            <p className="text-text font-bold">
+              Name:{' '}
+              <span className="text-text font-medium italic">
+                Matheus Tavares
+              </span>
+            </p>
+            <p className="text-text font-bold">
+              Barber:{' '}
+              <span className="text-text font-medium italic">
+                José Hernandez
+              </span>
+            </p>
+            <p className="text-text font-bold">
+              Date:{' '}
+              <span className="text-text font-medium italic">2025-04-10</span>
+            </p>
+            <p className="text-text font-bold">
+              Time:{' '}
+              <span className="text-text font-medium italic">11:30 am</span>
+            </p>
+            <p className="text-text font-bold">
+              Service:{' '}
+              <span className="text-text font-medium italic">
+                Classic Haircut
+              </span>
+            </p>
+            <hr className="text-text px-2" />
+            <p className="text-text italic text-sm">
+              Delays of up to 15 minutes will be tolerated
+            </p>
+            <p className="text-text italic text-sm">
+              If you are a customer of one of our plans, failure to appear will
+              be considered as an exercise of your right to disconnection.
+            </p>
+          </div>
+        </Modal>
       </AuthLayout>
     </div>
   )
