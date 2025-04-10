@@ -6,6 +6,7 @@ import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
 import Select from '@/components/ui/select'
+import Table from '@/components/ui/table'
 import React from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -133,6 +134,13 @@ export default function Booking() {
             <Button onClick={() => setIsOpen(true)}>Book Now</Button>
           </div>
 
+          <div className="flex flex-col w-full justify-center gap-2">
+            <p className="text-text text-2xl text-bold text-center md:text-start">
+              Appointments List
+            </p>
+            <Table />
+          </div>
+
           {/* Testimonials and Contact */}
           <div className="flex flex-col md:flex-row gap-4">
             {/* Testimonials */}
@@ -183,7 +191,7 @@ export default function Booking() {
             </p>
             <p className="text-text italic text-sm">
               If you are a customer of one of our plans, failure to appear will
-              be considered as an exercise of your right to disconnection.
+              be considered as an exercise of your right to cut.
             </p>
           </div>
         </Modal>

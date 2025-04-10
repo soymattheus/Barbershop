@@ -48,6 +48,14 @@ export default function AuthLayout({ children }: DrawerProps) {
     router.push('/pricing')
   }
 
+  const handleGalery = () => {
+    router.push('/galery')
+  }
+
+  const handleAboutUs = () => {
+    router.push('/aboutUs')
+  }
+
   return (
     <div className="flex flex-col w-full min-h-screen">
       <div className="flex flex-1 flex-row">
@@ -87,6 +95,7 @@ export default function AuthLayout({ children }: DrawerProps) {
               </button>
 
               <button
+                onClick={handleGalery}
                 type="button"
                 className="flex flex-row cursor-pointer gap-0.5"
               >
@@ -95,6 +104,7 @@ export default function AuthLayout({ children }: DrawerProps) {
               </button>
 
               <button
+                onClick={handleAboutUs}
                 type="button"
                 className="flex flex-row cursor-pointer gap-0.5"
               >
