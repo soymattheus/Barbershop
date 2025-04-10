@@ -67,13 +67,15 @@ export default function Booking() {
               The Barrio Barbers{' '}
               <span className="text-text text-2xl">Your Latin barber shop</span>
             </h1>
-            <p className="text-text leading-relaxed text-sm md:text-base">
-              Book your appointment easily
-            </p>
-          </div>
-
-          <div className="flex flex-row w-full">
-            <Button>My bookings</Button>
+            <div className="flex flex-row w-full">
+              <p className="text-text leading-relaxed text-sm md:text-base">
+                <span className="italic hover:underline cursor-pointer">
+                  Home
+                </span>
+                <span className="italic">{' > '}</span>
+                <span className="italic font-bold">Booking</span>
+              </p>
+            </div>
           </div>
 
           {/* Name and date */}
