@@ -82,8 +82,8 @@ export default function Pricing() {
           <div className="grid grid-cols-1 md:grid-cols-3 w-full gap-4 items-stretch">
             <div className="gap-2 flex flex-col">
               <p className="text-text font-bold text-xl">Monthly</p>
-              <div className="border border-text rounded-md gap-4 p-4 flex flex-col h-full">
-                <p className="text-text font-bold text-xl leading-none font-heading">
+              <div className="border border-text rounded-md gap-2 p-4 flex flex-col h-full">
+                <p className="text-primary font-bold text-xl leading-none font-heading">
                   💈 Monthly Plan – "Classic Cut Pass"
                 </p>
                 <hr className="text-gray-400 p-2" />
@@ -98,6 +98,100 @@ export default function Pricing() {
                   exclusive access to monthly grooming tips. Perfect for those
                   who like to keep it clean and consistent
                 </p>
+
+                <hr className="text-gray-400 p-2" />
+
+                <div className="flex flex-col w-full gap-2 p-2">
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">Haircuts</p>
+                    <p className="text-text italic">Skin Fade / Bald Fade</p>
+                    <p className="text-text italic">Taper Fade</p>
+                    <p className="text-text italic">Scissor Cut</p>
+                    <p className="text-text italic">Kids’ Haircut</p>
+                    <p className="text-text italic">Hair Designs / Razor Art</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Beard Services
+                    </p>
+                    <p className="text-text italic line-through">Beard Trim</p>
+                    <p className="text-text italic line-through">
+                      Hot Towel Shave
+                    </p>
+                    <p className="text-text italic line-through">
+                      Razor Line-Up / Shape-Up
+                    </p>
+                    <p className="text-text italic line-through">Beard Color</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Premium Add-Ons
+                    </p>
+                    <p className="text-text italic line-through">
+                      Eyebrow Shaping
+                    </p>
+                    <p className="text-text italic line-through">
+                      Hair Styling
+                    </p>
+                    <p className="text-text italic line-through">
+                      Shampoo & Wash
+                    </p>
+                    <p className="text-text italic line-through">
+                      Facial / Black Mask
+                    </p>
+                    <p className="text-text italic line-through">
+                      Steam Treatment
+                    </p>
+                    <p className="text-text italic line-through">
+                      Scalp Massage
+                    </p>
+                    <p className="text-text italic line-through">
+                      Nose / Ear Waxing
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Latin-Style Services
+                    </p>
+                    <p className="text-text italic line-through">
+                      Puerto Rican or Dominican Style Cuts
+                    </p>
+                    <p className="text-text italic line-through">
+                      Cut & Blow Dry Combo
+                    </p>
+                    <p className="text-text italic line-through">
+                      The Full Service
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Grooming & Self-Care
+                    </p>
+                    <p className="text-text italic line-through">
+                      Facial Scrub
+                    </p>
+                    <p className="text-text italic line-through">
+                      Hydrating Facial
+                    </p>
+                    <p className="text-text italic line-through">
+                      Scalp Detox Treatment
+                    </p>
+                    <p className="text-text italic line-through">
+                      Color Touch-Up
+                    </p>
+                    <p className="text-text italic line-through">
+                      Hair Relaxer / Texturizer
+                    </p>
+                    <p className="text-text italic line-through">
+                      After-Cut Cologne Spray
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex w-full items-center justify-center p-2">
                   <Button>Get Now</Button>
                 </div>
@@ -106,8 +200,8 @@ export default function Pricing() {
 
             <div className="gap-2 flex flex-col">
               <p className="text-text font-bold text-xl">Semiannual</p>
-              <div className="border border-text rounded-md gap-4 p-4 flex flex-col h-full">
-                <p className="text-text font-bold text-xl leading-none font-heading">
+              <div className="border border-text rounded-md gap-2 p-4 flex flex-col h-full">
+                <p className="text-primary font-bold text-xl leading-none font-heading">
                   💈 Semiannual Plan – "Gentleman's Choice"
                 </p>
                 <hr className="text-gray-400 p-2" />
@@ -122,6 +216,82 @@ export default function Pricing() {
                   off beard trims and hair products. Ideal for men who value
                   routine and premium care
                 </p>
+
+                <hr className="text-gray-400 p-2" />
+
+                <div className="flex flex-col w-full gap-2 p-2">
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">Haircuts</p>
+                    <p className="text-text italic">Skin Fade / Bald Fade</p>
+                    <p className="text-text italic">Taper Fade</p>
+                    <p className="text-text italic">Scissor Cut</p>
+                    <p className="text-text italic">Kids’ Haircut</p>
+                    <p className="text-text italic">Hair Designs / Razor Art</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Beard Services
+                    </p>
+                    <p className="text-text italic">Beard Trim</p>
+                    <p className="text-text italic">Hot Towel Shave</p>
+                    <p className="text-text italic">Razor Line-Up / Shape-Up</p>
+                    <p className="text-text italic">Beard Color</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Premium Add-Ons
+                    </p>
+                    <p className="text-text italic">Eyebrow Shaping</p>
+                    <p className="text-text italic">Hair Styling</p>
+                    <p className="text-text italic">Shampoo & Wash</p>
+                    <p className="text-text italic">Facial / Black Mask</p>
+                    <p className="text-text italic">Steam Treatment</p>
+                    <p className="text-text italic">Scalp Massage</p>
+                    <p className="text-text italic">Nose / Ear Waxing</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Latin-Style Services
+                    </p>
+                    <p className="text-text italic line-through">
+                      Puerto Rican or Dominican Style Cuts
+                    </p>
+                    <p className="text-text italic line-through">
+                      Cut & Blow Dry Combo
+                    </p>
+                    <p className="text-text italic line-through">
+                      The Full Service
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Grooming & Self-Care
+                    </p>
+                    <p className="text-text italic line-through">
+                      Facial Scrub
+                    </p>
+                    <p className="text-text italic line-through">
+                      Hydrating Facial
+                    </p>
+                    <p className="text-text italic line-through">
+                      Scalp Detox Treatment
+                    </p>
+                    <p className="text-text italic line-through">
+                      Color Touch-Up
+                    </p>
+                    <p className="text-text italic line-through">
+                      Hair Relaxer / Texturizer
+                    </p>
+                    <p className="text-text italic line-through">
+                      After-Cut Cologne Spray
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex w-full items-center justify-center p-2">
                   <Button>Get Now</Button>
                 </div>
@@ -130,8 +300,8 @@ export default function Pricing() {
 
             <div className="gap-2 flex flex-col">
               <p className="text-text font-bold text-xl">Annual</p>
-              <div className="border border-text rounded-md gap-4 p-4 flex flex-col h-full">
-                <p className="text-text font-bold text-xl leading-none font-heading">
+              <div className="border border-text rounded-md gap-2 p-4 flex flex-col h-full">
+                <p className="text-primary font-bold text-xl leading-none font-heading">
                   💈 Annual Plan – "The Elite Groom"
                 </p>
                 <hr className="text-gray-400 p-2" />
@@ -148,13 +318,73 @@ export default function Pricing() {
                   access to new services, and 15% off all products. For the true
                   modern gentleman who never settles
                 </p>
+
+                <hr className="text-gray-400 p-2" />
+
+                <div className="flex flex-col w-full gap-2 p-2">
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">Haircuts</p>
+                    <p className="text-text italic">Skin Fade / Bald Fade</p>
+                    <p className="text-text italic">Taper Fade</p>
+                    <p className="text-text italic">Scissor Cut</p>
+                    <p className="text-text italic">Kids’ Haircut</p>
+                    <p className="text-text italic">Hair Designs / Razor Art</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Beard Services
+                    </p>
+                    <p className="text-text italic">Beard Trim</p>
+                    <p className="text-text italic">Hot Towel Shave</p>
+                    <p className="text-text italic">Razor Line-Up / Shape-Up</p>
+                    <p className="text-text italic">Beard Color</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Premium Add-Ons
+                    </p>
+                    <p className="text-text italic">Eyebrow Shaping</p>
+                    <p className="text-text italic">Hair Styling</p>
+                    <p className="text-text italic">Shampoo & Wash</p>
+                    <p className="text-text italic">Facial / Black Mask</p>
+                    <p className="text-text italic">Steam Treatment</p>
+                    <p className="text-text italic">Scalp Massage</p>
+                    <p className="text-text italic">Nose / Ear Waxing</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Latin-Style Services
+                    </p>
+                    <p className="text-text italic">
+                      Puerto Rican or Dominican Style Cuts
+                    </p>
+                    <p className="text-text italic">Cut & Blow Dry Combo</p>
+                    <p className="text-text italic">The Full Service</p>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-1">
+                    <p className="text-primary font-bold text-xl">
+                      Grooming & Self-Care
+                    </p>
+                    <p className="text-text italic">Facial Scrub</p>
+                    <p className="text-text italic">Hydrating Facial</p>
+                    <p className="text-text italic">Scalp Detox Treatment</p>
+                    <p className="text-text italic">Color Touch-Up</p>
+                    <p className="text-text italic">
+                      Hair Relaxer / Texturizer
+                    </p>
+                    <p className="text-text italic">After-Cut Cologne Spray</p>
+                  </div>
+                </div>
+
                 <div className="flex w-full items-center justify-center p-2">
                   <Button>Get Now</Button>
                 </div>
               </div>
             </div>
-
-            {/* Repita o mesmo padrão nos outros dois cards */}
           </div>
 
           {/* Testimonials and Contact */}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from './button'
 
 const appointments = [
   {
@@ -64,6 +65,7 @@ export default function Table() {
               <th className="text-left px-4 py-2">Service</th>
               <th className="text-left px-4 py-2">Barber</th>
               <th className="text-left px-4 py-2">Status</th>
+              <th className="text-left px-4 py-2">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -74,6 +76,16 @@ export default function Table() {
                 <td className="px-4 py-2 text-text">{appointment.service}</td>
                 <td className="px-4 py-2 text-text">{appointment.barber}</td>
                 <td className="px-4 py-2 text-text">{appointment.status}</td>
+                <td className="px-4 py-2">
+                  <button
+                    type="button"
+                    disabled={appointment?.status === 'completed'}
+                    onClick={() => alert('Cancel')}
+                    className="px-3 py-1 bg-primary text-white rounded disabled:opacity-50 text-sm"
+                  >
+                    Cancel
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
