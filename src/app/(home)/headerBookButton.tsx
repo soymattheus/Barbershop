@@ -11,7 +11,7 @@ export default function HeaderBookButton({ className }: BookButtonProps) {
   const router = useRouter()
 
   const handleClick = () => {
-    router.push('/booking') // navega para a rota /booking
+    router.push('/login') // navega para a rota /booking
   }
 
   return (
