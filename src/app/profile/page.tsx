@@ -1,6 +1,7 @@
 'use client'
 
 import AuthLayout from '@/components/layout/authLayout'
+import Banner from '@/components/layout/banner'
 import { Button } from '@/components/ui/button'
 import Table from '@/components/ui/table'
 import React from 'react'
@@ -15,21 +16,7 @@ export default function Booking() {
       <AuthLayout>
         {/* Body */}
         <div className="flex flex-col px-6 gap-4 md:gap-10">
-          <div className="flex flex-col w-full md:w-2/3 gap-4 items-center md:items-start">
-            <h1 className="text-4xl text-primary leading-none font-heading font-medium flex flex-col md:text-6xl text-center md:text-left">
-              The Barrio Barbers{' '}
-              <span className="text-text text-2xl">Your Latin barber shop</span>
-            </h1>
-            <div className="flex flex-row w-full">
-              <p className="text-text leading-relaxed text-sm md:text-base">
-                <span className="italic hover:underline cursor-pointer">
-                  Home
-                </span>
-                <span className="italic">{' > '}</span>
-                <span className="italic font-bold">Profile</span>
-              </p>
-            </div>
-          </div>
+          <Banner showNavigation page="Profile" />
 
           <div className="flex flex-col w-full gap-1">
             <p className="text-text">

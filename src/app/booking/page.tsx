@@ -1,6 +1,7 @@
 'use client'
 
 import AuthLayout from '@/components/layout/authLayout'
+import Banner from '@/components/layout/banner'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import { Button } from '@/components/ui/button'
@@ -16,37 +17,16 @@ export default function Booking() {
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
 
   const services = [
-    {
-      value: 'classic',
-      label: 'Classic Haircut',
-    },
-    {
-      value: 'fade',
-      label: 'Skin Fade',
-    },
-    {
-      value: 'beard',
-      label: 'Beard Trim',
-    },
-    {
-      value: 'combo',
-      label: 'The Full Service',
-    },
+    { value: 'classic', label: 'Classic Haircut' },
+    { value: 'fade', label: 'Skin Fade' },
+    { value: 'beard', label: 'Beard Trim' },
+    { value: 'combo', label: 'The Full Service' },
   ]
 
   const professionals = [
-    {
-      value: 'thiago',
-      label: 'Thiago Silva',
-    },
-    {
-      value: 'cabral',
-      label: 'Cabral Silva',
-    },
-    {
-      value: 'jose',
-      label: 'José Santos',
-    },
+    { value: 'thiago', label: 'Thiago Silva' },
+    { value: 'cabral', label: 'Cabral Silva' },
+    { value: 'jose', label: 'José Santos' },
   ]
 
   const time = [
@@ -61,53 +41,41 @@ export default function Booking() {
   ]
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="w-full min-h-screen bg-gray-50">
       <AuthLayout>
-        {/* Body */}
-        <div className="flex flex-col px-6 gap-4 md:gap-10">
-          <div className="flex flex-col w-full md:w-2/3 gap-4 items-center md:items-start">
-            <h1 className="text-4xl text-primary leading-none font-heading font-medium flex flex-col md:text-6xl text-center md:text-left">
-              The Barrio Barbers{' '}
-              <span className="text-text text-2xl">Your Latin barber shop</span>
-            </h1>
-            <div className="flex flex-row w-full">
-              <p className="text-text leading-relaxed text-sm md:text-base">
-                <span className="italic hover:underline cursor-pointer">
-                  Home
-                </span>
-                <span className="italic">{' > '}</span>
-                <span className="italic font-bold">Booking</span>
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col px-6 md:px-12 py-10 gap-10">
+          <Banner showNavigation page="Booking" />
 
           {/* Name and date */}
-          <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label htmlFor="name" className="text-sm font-semibold text-text">
-                Name:
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Name
               </label>
               <input
                 type="text"
-                name="name"
                 id="name"
-                placeholder="name"
                 disabled
                 value="Matheus Tavares"
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
+                className="w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label htmlFor="date" className="text-sm font-semibold text-text">
+            <div>
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Select a Date
               </label>
               <DatePicker
-                name="date"
                 id="date"
                 selected={startDate}
                 onChange={date => setStartDate(date)}
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
+                className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 dateFormat="MMMM d, yyyy"
                 minDate={new Date()}
                 placeholderText="Pick a date"
@@ -115,81 +83,72 @@ export default function Booking() {
             </div>
           </div>
 
-          {/* Service, time and profissional */}
-          <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
+          {/* Service, Time, Professional */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
               <Select description="Service" data={services} />
             </div>
-
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
+            <div>
               <Select description="Time" data={time} />
             </div>
-
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <Select description="Profissional" data={professionals} />
+            <div>
+              <Select description="Professional" data={professionals} />
             </div>
           </div>
 
-          <div className="flex flex-row w-full justify-center">
+          {/* Book button */}
+          <div className="w-full flex justify-center mt-4">
             <Button onClick={() => setIsOpen(true)}>Book Now</Button>
           </div>
 
-          <div className="flex flex-col w-full justify-center gap-2">
-            <p className="text-text text-2xl text-bold text-center md:text-start">
+          {/* Appointments */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left">
               Appointments List
-            </p>
+            </h2>
             <Table />
           </div>
 
-          {/* Testimonials and Contact */}
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Testimonials */}
+          {/* Testimonials + Contact */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
             <CustomerTestimonials />
-
-            {/* Contact */}
             <Contact />
           </div>
         </div>
-        {/* End body */}
 
+        {/* Modal */}
         <Modal
           title="Booking Details"
           onClose={() => setIsOpen(false)}
           isOpen={isOpen}
         >
-          <div className="flex flex-col w-full gap-2">
-            <hr className="text-gray-400 px-2" />
-            <p className="text-text font-bold">
-              Name:{' '}
-              <span className="text-text font-medium italic">
-                Matheus Tavares
-              </span>
+          <div className="space-y-2 text-sm text-gray-700">
+            <hr className="border-gray-300" />
+            <p>
+              <span className="font-semibold">Name:</span>{' '}
+              <span className="italic">Matheus Tavares</span>
             </p>
-            <p className="text-text font-bold">
-              Barber:{' '}
-              <span className="text-text font-medium italic">
-                José Hernandez
-              </span>
+            <p>
+              <span className="font-semibold">Barber:</span>{' '}
+              <span className="italic">José Hernandez</span>
             </p>
-            <p className="text-text font-bold">
-              Date:{' '}
-              <span className="text-text font-medium italic">2025-04-10</span>
+            <p>
+              <span className="font-semibold">Date:</span>{' '}
+              <span className="italic">2025-04-10</span>
             </p>
-            <p className="text-text font-bold">
-              Time:{' '}
-              <span className="text-text font-medium italic">11:30 am</span>
+            <p>
+              <span className="font-semibold">Time:</span>{' '}
+              <span className="italic">11:30 AM</span>
             </p>
-            <p className="text-text font-bold">
-              Service:{' '}
-              <span className="text-text font-medium italic">
-                Classic Haircut
-              </span>
+            <p>
+              <span className="font-semibold">Service:</span>{' '}
+              <span className="italic">Classic Haircut</span>
             </p>
-            <hr className="text-text px-2" />
-            <p className="text-text italic text-sm">
-              Delays of up to 15 minutes will be tolerated
+            <hr className="border-gray-300" />
+            <p className="italic text-gray-500">
+              Delays of up to 15 minutes will be tolerated.
             </p>
-            <p className="text-text italic text-sm">
+            <p className="italic text-gray-500">
               If you are a customer of one of our plans, failure to appear will
               be considered as an exercise of your right to cut.
             </p>

@@ -149,7 +149,7 @@ export default function AuthLayout({ children }: DrawerProps) {
           </div>
 
           {/* Main content */}
-          <div className="pb-4 md:pb-10">{children}</div>
+          <div className="pb-4 md:pb-10 md:px-3.5">{children}</div>
         </div>
       </div>
 

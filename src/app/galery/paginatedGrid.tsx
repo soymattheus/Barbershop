@@ -84,6 +84,7 @@ export default function PaginatedGrid() {
             width={450}
             height={300}
             className="rounded-lg shadow-lg"
+            onClick={e => e.stopPropagation()}
           />
         </div>
       )}
