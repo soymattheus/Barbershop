@@ -4,6 +4,7 @@ import AuthLayout from '@/components/layout/authLayout'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import React from 'react'
+import PaginatedGrid from './paginatedGrid'
 
 export default function Galery() {
   return (
@@ -28,11 +29,9 @@ export default function Galery() {
           </div>
 
           {/* Name and date */}
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full gap-4 md:gap-10">
             <p className="text-text font-bold text-xl">Our work</p>
-            <div className="grid grid-cols-1 md:grid-cols-4 w-full gap-4 items-stretch">
-              <p className="text-text">Here comes the photos</p>
-            </div>
+            <PaginatedGrid />
           </div>
 
           {/* Testimonials and Contact */}
