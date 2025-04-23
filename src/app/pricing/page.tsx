@@ -5,7 +5,7 @@ import Banner from '@/components/layout/banner'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import type React from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 
 export default function Pricing() {
@@ -75,7 +75,7 @@ export default function Pricing() {
               <p className="text-text font-extrabold text-2xl text-center">
                 Annual
               </p>
-              <div className="bg-white shadow-xl border border-yellow-400 border-2 rounded-xl gap-4 p-6 flex flex-col h-full">
+              <div className="bg-white shadow-xl border border-yellow-400 rounded-xl gap-4 p-6 flex flex-col h-full">
                 <p className="text-primary font-bold text-2xl leading-none font-heading text-center">
                   💈 The Elite Groom
                 </p>
@@ -109,9 +109,14 @@ export default function Pricing() {
   )
 }
 
-// Componente extra sugerido para melhor organização dos detalhes dos planos
-function PlanDetails({ plan }) {
-  const sharedServices = [
+type PlanType = 'monthly' | 'semiannual' | 'annual'
+
+interface PlanDetailsProps {
+  plan: PlanType
+}
+
+const PlanDetails: React.FC<PlanDetailsProps> = ({ plan }) => {
+  const sharedServices: string[] = [
     'Skin Fade / Bald Fade',
     'Taper Fade',
     'Scissor Cut',
@@ -119,7 +124,15 @@ function PlanDetails({ plan }) {
     'Hair Designs / Razor Art',
   ]
 
-  const services = {
+  const services: Record<
+    PlanType,
+    {
+      beard: boolean
+      premium: boolean
+      latin: boolean
+      grooming: boolean
+    }
+  > = {
     monthly: {
       beard: false,
       premium: false,
@@ -146,9 +159,9 @@ function PlanDetails({ plan }) {
     <div className="text-sm text-text flex flex-col gap-2">
       <div>
         <p className="font-bold text-primary">Haircuts</p>
-        {sharedServices.map(s => (
-          <p className="italic" key={s}>
-            {s}
+        {sharedServices.map(service => (
+          <p className="italic" key={service}>
+            {service}
           </p>
         ))}
       </div>
@@ -160,12 +173,12 @@ function PlanDetails({ plan }) {
           'Hot Towel Shave',
           'Razor Line-Up / Shape-Up',
           'Beard Color',
-        ].map(s => (
+        ].map(service => (
           <p
             className={`italic ${!show.beard ? 'line-through text-gray-400' : ''}`}
-            key={s}
+            key={service}
           >
-            {s}
+            {service}
           </p>
         ))}
       </div>
@@ -180,12 +193,12 @@ function PlanDetails({ plan }) {
           'Steam Treatment',
           'Scalp Massage',
           'Nose / Ear Waxing',
-        ].map(s => (
+        ].map(service => (
           <p
             className={`italic ${!show.premium ? 'line-through text-gray-400' : ''}`}
-            key={s}
+            key={service}
           >
-            {s}
+            {service}
           </p>
         ))}
       </div>
@@ -196,12 +209,12 @@ function PlanDetails({ plan }) {
           'Puerto Rican or Dominican Style Cuts',
           'Cut & Blow Dry Combo',
           'The Full Service',
-        ].map(s => (
+        ].map(service => (
           <p
             className={`italic ${!show.latin ? 'line-through text-gray-400' : ''}`}
-            key={s}
+            key={service}
           >
-            {s}
+            {service}
           </p>
         ))}
       </div>
@@ -215,12 +228,12 @@ function PlanDetails({ plan }) {
           'Color Touch-Up',
           'Hair Relaxer / Texturizer',
           'After-Cut Cologne Spray',
-        ].map(s => (
+        ].map(service => (
           <p
             className={`italic ${!show.grooming ? 'line-through text-gray-400' : ''}`}
-            key={s}
+            key={service}
           >
-            {s}
+            {service}
           </p>
         ))}
       </div>

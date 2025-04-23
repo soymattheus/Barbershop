@@ -31,7 +31,9 @@ export default function Booking() {
 
   const time = [
     { label: '9:00 AM', value: '09:00' },
+    { label: '9:30 AM', value: '09:30' },
     { label: '10:00 AM', value: '10:00' },
+    { label: '10:30 AM', value: '10:30' },
     { label: '11:00 AM', value: '11:00' },
     { label: '12:00 PM', value: '12:00' },
     { label: '1:00 PM', value: '13:00' },
@@ -41,7 +43,7 @@ export default function Booking() {
   ]
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         <div className="flex flex-col px-6 md:px-12 py-10 gap-10">
           <Banner showNavigation page="Booking" />
@@ -110,7 +112,7 @@ export default function Booking() {
           </div>
 
           {/* Testimonials + Contact */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+          <div className="flex flex-col md:flex-row gap-6 mt-10">
             <CustomerTestimonials />
             <Contact />
           </div>

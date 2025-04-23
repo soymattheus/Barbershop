@@ -9,7 +9,7 @@ import PaginatedGrid from './paginatedGrid'
 
 export default function Galery() {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         {/* Body */}
         <div className="flex flex-col px-6 gap-4 md:gap-10">

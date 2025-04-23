@@ -207,7 +207,7 @@ export default function Services() {
               filterCategory('Haircuts')
             }
           }}
-          className="flex w-full md:w-1/4 text-text justify-center items-center bg-blue h-24 rounded-2xl cursor-pointer"
+          className="flex w-full md:w-1/4 text-text justify-center items-center bg-white h-24 cursor-pointer shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl"
         >
           <p className="font-bold">Haircuts</p>
         </div>
@@ -219,7 +219,7 @@ export default function Services() {
               filterCategory('Beard Services')
             }
           }}
-          className="flex w-full md:w-1/4 text-text justify-center items-center bg-blue h-24 rounded-2xl cursor-pointer"
+          className="flex w-full md:w-1/4 text-text justify-center items-center bg-white h-24 cursor-pointer shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl"
         >
           <p className="font-bold">Beard Services</p>
         </div>
@@ -231,7 +231,7 @@ export default function Services() {
               filterCategory('Premium Add-Ons')
             }
           }}
-          className="flex w-full md:w-1/4 text-text justify-center items-center bg-blue h-24 rounded-2xl cursor-pointer"
+          className="flex w-full md:w-1/4 text-text justify-center items-center bg-white h-24 cursor-pointer shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl"
         >
           <p className="font-bold">Premium Add-Ons</p>
         </div>
@@ -243,7 +243,7 @@ export default function Services() {
               filterCategory('Latin-Style Services')
             }
           }}
-          className="flex w-full md:w-1/4 text-text justify-center items-center bg-blue h-24 rounded-2xl cursor-pointer"
+          className="flex w-full md:w-1/4 text-text justify-center items-center bg-white h-24 cursor-pointer shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl"
         >
           <p className="font-bold">Latin-Style Services</p>
         </div>
@@ -255,7 +255,7 @@ export default function Services() {
               filterCategory('Grooming & Self-Care')
             }
           }}
-          className="flex w-full md:w-1/4 text-text justify-center items-center bg-blue h-24 rounded-2xl cursor-pointer"
+          className="flex w-full md:w-1/4 text-text justify-center items-center bg-white h-24 cursor-pointer shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl"
         >
           <p className="font-bold">Grooming & Self-Care</p>
         </div>

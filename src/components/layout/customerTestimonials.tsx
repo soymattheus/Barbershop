@@ -7,20 +7,28 @@ export default function CustomerTestimonials() {
         <p className="text-text text-2xl text-bold">Customer Testimonials</p>
       </div>
       <div className="flex flex-row w-full">
-        <div className="flex flex-col w-full bg-blue rounded-b-2xl">
-          <div className="flex flex-row w-full gap-4 p-4 items-center bg-primary rounded-t-2xl">
-            <UserCircle />
-            <p className="text-text">2025 april 6, 12:36pm</p>
+        <div className="flex flex-col w-full mx-auto bg-white shadow-xl border border-yellow-400 rounded-2xl overflow-hidden transition hover:shadow-2xl">
+          {/* Header */}
+          <div className="flex items-center gap-4 p-4 bg-yellow-50 text-primary">
+            <UserCircle className="w-8 h-8" />
+            <p className="font-semibold text-sm md:text-base">
+              April 6, 2025 — 12:36 PM
+            </p>
           </div>
-          <hr className="m-2" />
-          <div className="flex flex-col px-4 pb-4">
-            <p className="text-text">
-              " Hands down the best barbershop in town! Top-notch service, super
+
+          <hr className="border-t border-yellow-300" />
+
+          {/* Body */}
+          <div className="flex flex-col gap-3 p-4 text-text">
+            <p className="text-sm md:text-base leading-relaxed">
+              “Hands down the best barbershop in town! Top-notch service, super
               chill atmosphere, and barbers who really know what they're doing.
               I walked out feeling fresh and confident. This place is my go-to
-              from now on!"
+              from now on!”
             </p>
-            <p className="text-text font-bold italic">- Matheus Tavares</p>
+            <p className="font-bold italic self-end text-sm md:text-base">
+              – Matheus Tavares
+            </p>
           </div>
         </div>
       </div>

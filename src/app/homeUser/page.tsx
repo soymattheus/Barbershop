@@ -7,7 +7,7 @@ import React from 'react'
 
 export default function Home() {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         {/* Body */}
         <div className="flex flex-col px-6 gap-4 md:gap-16">
@@ -18,10 +18,7 @@ export default function Home() {
 
           {/* Testimonials and Contact */}
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Testimonials */}
             <CustomerTestimonials />
-
-            {/* Contact */}
             <Contact />
           </div>
         </div>
