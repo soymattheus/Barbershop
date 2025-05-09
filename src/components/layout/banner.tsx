@@ -35,7 +35,7 @@ export default function Banner({
 
         <div className="flex flex-row w-full">
           <p
-            className={`text-text leading-relaxed text-sm md:text-base ${showNavigation ? 'flex' : 'hidden'}`}
+            className={`text-text leading-relaxed text-sm md:text-base ${showNavigation ? 'block' : 'hidden'}`}
           >
             <span className="italic hover:underline cursor-pointer">Home</span>
             <span className="italic">{' > '}</span>
