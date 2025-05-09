@@ -44,7 +44,7 @@ export default function PaginatedGrid() {
             alt="Barber Shop"
             width={400}
             height={300}
-            className="rounded-md object-cover"
+            className="rounded-md object-cover cursor-pointer shadow-md transition-transform duration-200 hover:scale-105"
             onClick={() => handleOpenPhoto(item?.imagePath)}
           />
         ))}

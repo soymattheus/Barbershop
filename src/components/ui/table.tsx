@@ -77,14 +77,12 @@ export default function Table() {
                 <td className="px-4 py-2 text-text">{appointment.barber}</td>
                 <td className="px-4 py-2 text-text">{appointment.status}</td>
                 <td className="px-4 py-2">
-                  <button
-                    type="button"
+                  <Button
                     disabled={appointment?.status === 'completed'}
                     onClick={() => alert('Cancel')}
-                    className="px-3 py-1 bg-primary text-white rounded disabled:opacity-50 text-sm"
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -94,25 +92,21 @@ export default function Table() {
 
       {/* Paginação */}
       <div className="flex justify-center md:justify-end gap-2 mt-4">
-        <button
-          type="button"
+        <Button
           onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-          className="px-3 py-1 bg-primary text-white rounded disabled:opacity-50 text-sm"
           disabled={currentPage === 1}
         >
-          Anterior
-        </button>
+          Previous
+        </Button>
         <span className="px-3 py-1 text-gray-700 text-sm">
-          Página {currentPage} de {totalPages}
+          Page {currentPage} of {totalPages}
         </span>
-        <button
-          type="button"
+        <Button
           onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-          className="px-3 py-1 bg-primary text-white rounded disabled:opacity-50 text-sm"
           disabled={currentPage === totalPages}
         >
-          Próxima
-        </button>
+          Next
+        </Button>
       </div>
     </div>
   )
