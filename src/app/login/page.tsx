@@ -50,7 +50,7 @@ export default function LoginScreen() {
   return (
     <form
       onSubmit={handleSubmit(onLogin)}
-      className="flex w-full mx-auto items-center justify-center min-h-dvh md:gap-16 bg-blue"
+      className="flex w-full mx-auto items-center justify-center min-h-dvh md:gap-16 bg-primary md:bg-blue"
     >
       <Toast />
       <div className="flex flex-col w-full md:w-2/4 p-8 gap-4 md:my-3 bg-primary md:rounded-2xl items-center justify-center">
