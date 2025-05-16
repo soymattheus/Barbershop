@@ -1,11 +1,9 @@
 'use client'
 
 import Footer from '@/components/layout/footer'
+import { useAuth } from '@/hooks/auth'
 import {
-  ArrowLeft,
-  BookmarkCheck,
   CircleDollarSign,
-  Coins,
   Home,
   Images,
   LogOut,
@@ -26,9 +24,8 @@ interface DrawerProps {
 export default function AuthLayout({ children }: DrawerProps) {
   const router = useRouter()
   const pathname = usePathname()
-
+  const { user, handleLogout } = useAuth()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const [userName, setUserName] = React.useState<string>('Matheus Tavares')
 
   // Impede scroll do background quando sidebar estiver aberto
   React.useEffect(() => {
@@ -48,16 +45,12 @@ export default function AuthLayout({ children }: DrawerProps) {
     router.push('/profile')
   }
 
-  const handleExit = () => {
-    router.push('/')
-  }
-
   const handleBooking = () => {
     router.push('/booking')
   }
 
-  const handleHomeUser = () => {
-    router.push('/homeUser')
+  const handlePortal = () => {
+    router.push('/portal')
   }
 
   const handlePricing = () => {
@@ -84,7 +77,7 @@ export default function AuthLayout({ children }: DrawerProps) {
           <div className="flex flex-col w-full h-full justify-between">
             <div className="flex flex-col gap-6">
               <button
-                onClick={handleHomeUser}
+                onClick={handlePortal}
                 type="button"
                 className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
               >
@@ -135,7 +128,7 @@ export default function AuthLayout({ children }: DrawerProps) {
 
             <button
               type="button"
-              onClick={handleExit}
+              onClick={handleLogout}
               className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-red-600/20 transition"
             >
               <LogOut className="text-red-400 w-5 h-5" />
@@ -144,6 +137,7 @@ export default function AuthLayout({ children }: DrawerProps) {
           </div>
         </aside>
 
+        {/* Sidebar mobile */}
         {isOpen && (
           <div className="fixed inset-0 z-50 flex md:hidden">
             {/* Overlay escuro */}
@@ -171,7 +165,7 @@ export default function AuthLayout({ children }: DrawerProps) {
               <div className="min-h-11/12 flex flex-col gap-8 justify-between">
                 <div className="flex flex-col gap-4">
                   <button
-                    onClick={handleHomeUser}
+                    onClick={handlePortal}
                     type="button"
                     className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
                   >
@@ -219,7 +213,7 @@ export default function AuthLayout({ children }: DrawerProps) {
                 {/* Botão de logout */}
                 <button
                   type="button"
-                  onClick={handleExit}
+                  onClick={handleLogout}
                   className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-red-600/20 transition mt-8"
                 >
                   <LogOut className="text-red-400 w-5 h-5" />
@@ -242,7 +236,7 @@ export default function AuthLayout({ children }: DrawerProps) {
               <IconButton onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? <PanelLeftClose /> : <Menu />}
               </IconButton>
-              <p className="font-semibold">{userName}</p>
+              <p className="font-semibold">{user?.user?.name}</p>
             </div>
 
             {pathname !== '/booking' && (
