@@ -5,12 +5,12 @@ import { InputField, InputIcon, InputRoot } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import Toast from '@/components/ui/toast'
-import { Login } from '@/http/api'
-import React from 'react'
+import { useAuth } from '@/hooks/auth'
 
 const subscriptionSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -22,6 +22,7 @@ const subscriptionSchema = z.object({
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export default function LoginScreen() {
+  const { handleLogin } = useAuth()
   const router = useRouter()
   const [showPassword, setShowPassword] = React.useState(false)
   const {
@@ -33,14 +34,7 @@ export default function LoginScreen() {
   })
 
   async function onLogin({ email, password }: SubscriptionSchema) {
-    const data = await Login({ email, password })
-
-    const user = data.user
-    const token = data.token
-
-    if (user) {
-      router.push('/homeUser') // navega para a rota /booking
-    }
+    handleLogin(email, password)
   }
 
   const handleresgisterScreen = () => {

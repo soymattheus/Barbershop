@@ -45,9 +45,10 @@ export const Login = async (
   }
 
   const body = {
-    token: '5465465346gfgfd',
+    token:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQiLCJlbWFpbCI6Im1hdGhldXNAZW1haWwuY29tIiwiaWF0IjoxNzE1NTY4ODAwLCJleHAiOjE3MTU1NzI0MDB9._l4KaXBrN4FyJzq3Q8OMzWgRrN-jCLhdfW4fkwYyVPg',
     user: {
-      id: 'fdg56frgfdg45645',
+      id: '3f2504e0-4f89-11d3-9a0c-0305e82c3301',
       name: 'Matheus Tavares',
       email: 'matheus@email.com',
       createdAt: '2023-10-01T00:00:00.000Z',

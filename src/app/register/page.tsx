@@ -41,13 +41,6 @@ export default function RegisterScreen() {
     confirmPassword,
   }: SubscriptionSchema) {
     const data = await Register({ email, password, confirmPassword })
-
-    const user = data.user
-    const token = data.token
-
-    // if (user) {
-    //   router.push('/homeUser') // navega para a rota /booking
-    // }
   }
 
   const handleLoginScreen = () => {

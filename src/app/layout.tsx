@@ -1,5 +1,6 @@
 import './globals.css'
 import ContextApp from '@/context'
+import AppProvider from '@/hooks'
 
 import type { Metadata } from 'next'
 import { Montserrat, Oxanium } from 'next/font/google'
@@ -30,7 +31,7 @@ export default function RootLayout({
     <html lang="en" className={`${montserrat.variable} ${oxanium.variable}`}>
       <body className="min-w-[320px] bg-secondary text-gray-100">
         <main className="mx-auto flex">
-          <ContextApp>{children}</ContextApp>
+          <AppProvider>{children}</AppProvider>
         </main>
       </body>
     </html>
