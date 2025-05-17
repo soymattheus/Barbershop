@@ -1,7 +1,5 @@
 'use client' // se estiver usando App Router
 
-import { useState } from 'react'
-
 interface OptionProps {
   value: string
   label: string
@@ -10,11 +8,16 @@ interface OptionProps {
 interface SelectProps {
   description: string
   data: OptionProps[]
+  selected: string
+  setSelected: (value: string) => void
 }
 
-export default function Select({ description, data }: SelectProps) {
-  const [selected, setSelected] = useState('')
-
+export default function Select({
+  description,
+  data,
+  selected,
+  setSelected,
+}: SelectProps) {
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor="service" className="text-sm font-semibold text-text">

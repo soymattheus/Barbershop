@@ -11,16 +11,7 @@ import React, {
   type ReactNode,
 } from 'react'
 
-type User = {
-  token: string
-  user: {
-    id: string
-    name: string
-    email: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
+import type { User } from '@/types/user'
 
 type AuthContextType = {
   user: User | null
@@ -67,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     Cookies.remove('token')
     Cookies.remove('user')
     setUser(null)
