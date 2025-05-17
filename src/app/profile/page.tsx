@@ -122,7 +122,7 @@ export default function Booking() {
             <p className="text-text text-2xl text-bold text-center md:text-start">
               Appointments List
             </p>
-            <Table />
+            <Table bookingData={[]} />
           </div>
         </div>
         {/* End body */}
