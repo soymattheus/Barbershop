@@ -291,8 +291,17 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleBookAppointment = async () => {
+    const user = Cookies.get('user')
+    if (!user) {
+      console.log('Please log in to book an appointment.')
+      return
+    }
+    const userJson = JSON.parse(user)
+    const userId = userJson?.id
+
     const bookingData: BookingData = {
       id: `appt_${Date.now()}`,
+      userId: userId,
       barber: selectedBarber,
       date: selectedDate,
       time: selectedTime,
@@ -318,11 +327,24 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleFetchBookingData = () => {
+    const user = Cookies.get('user')
+    const userJson = user ? JSON.parse(user) : null
+    const userId = userJson ? userJson?.id : ''
+
+    if (!userId) {
+      console.log('No user ID found in cookies.')
+      return
+    }
+
     const bookingDataString = localStorage.getItem('bookingData')
     if (bookingDataString) {
       const parsedBookingData: BookingData[] = JSON.parse(bookingDataString)
-      console.log('Fetched booking data:', parsedBookingData)
-      setBookingData(parsedBookingData)
+
+      const userBookings = parsedBookingData.filter(
+        booking => booking.userId === userId
+      )
+      console.log('Fetched booking data:', userBookings)
+      setBookingData(userBookings)
     } else {
       setBookingData([])
       console.log('No booking data found.')

@@ -4,16 +4,120 @@ import AuthLayout from '@/components/layout/authLayout'
 import Banner from '@/components/layout/banner'
 import { Button } from '@/components/ui/button'
 import Table from '@/components/ui/table'
-import React from 'react'
+import React, { useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-export default function Booking() {
-  const [startDate, setStartDate] = React.useState<Date | null>(new Date())
+import Toast from '@/components/ui/toast'
+import { useAuth } from '@/hooks/auth'
+import { useProfile } from '@/providers/profile'
+import { Mask } from '@/utils/mask'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { set } from 'date-fns'
+
+const profileSchema = z.object({
+  name: z.string().min(1, {
+    message: 'Name is required field',
+  }),
+  createdAt: z
+    .date({
+      required_error: 'Date is required',
+      invalid_type_error: 'Invalid date',
+    })
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(23, 59, 59, 0) // zera hora, minuto, segundo e ms
+        return date <= today
+      },
+      {
+        message: 'Date must be today or in the future',
+      }
+    ),
+  birthDate: z
+    .date({
+      required_error: 'Date is required',
+      invalid_type_error: 'Invalid date',
+    })
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(23, 59, 59, 0) // zera hora, minuto, segundo e ms
+        return date < today
+      },
+      {
+        message: 'Date must be today or in the past',
+      }
+    ),
+  phone: z.string().min(1, {
+    message: 'Phone is required field',
+  }),
+  email: z
+    .string()
+    .min(1, {
+      message: 'Email is required field',
+    })
+    .email({
+      message: 'Invalid email address',
+    }),
+})
+
+type ProfileSchema = z.infer<typeof profileSchema>
+
+export default function Profile() {
+  const { user } = useAuth()
+  const {
+    birthDate,
+    setBirthDate,
+    phone,
+    setPhone,
+    email,
+    setEmail,
+    bookingData,
+    handleUpdateUserData,
+    name,
+    setName,
+  } = useProfile()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      name: user?.user?.name || '',
+      createdAt: user?.user?.createdAt
+        ? new Date(user.user.createdAt)
+        : new Date(),
+      birthDate: birthDate || new Date(),
+      phone: phone || '',
+      email: email || '',
+    },
+  })
+
+  useEffect(() => {
+    setValue('name', name || '')
+    setValue('birthDate', birthDate ? new Date(birthDate) : new Date())
+    setValue('phone', phone || '')
+    setValue('email', email || '')
+    setValue(
+      'createdAt',
+      user?.user?.createdAt ? new Date(user.user.createdAt) : new Date()
+    )
+  }, [birthDate, phone, email, setValue, name, user?.user?.createdAt])
+
+  const handleUpdate = async () => {
+    handleUpdateUserData()
+  }
 
   return (
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
+        <Toast />
         {/* Body */}
         <div className="flex flex-col px-6 gap-4 md:gap-10">
           <Banner showNavigation page="Profile" />
@@ -28,101 +132,170 @@ export default function Booking() {
             </p>
           </div>
 
-          {/* Name and date */}
-          <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label htmlFor="name" className="text-sm font-semibold text-text">
-                Name:
-              </label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                placeholder="name"
-                value="Matheus Tavares"
-                onChange={() => {}}
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
-              />
+          <form
+            className="flex flex-col gap-6"
+            onSubmit={handleSubmit(handleUpdate)}
+          >
+            {/* Name and date */}
+            <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
+              <div className="flex flex-col w-full md:w-3/7 gap-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-bold text-gray-700 mb-1"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  // disabled
+                  {...register('name')}
+                  value={name}
+                  onChange={e => {
+                    const val = e.target.value
+                    setName(val)
+                    setValue('name', val, { shouldValidate: true })
+                  }}
+                  placeholder="Enter your name"
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+
+                {errors?.name && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col w-full md:w-3/7 gap-2">
+                <label
+                  htmlFor="date"
+                  className="text-sm font-semibold text-text"
+                >
+                  Birth Date
+                </label>
+                <DatePicker
+                  id="birthDate"
+                  selected={birthDate}
+                  onChange={date => {
+                    if (date) {
+                      setBirthDate(date)
+                      setValue('birthDate', date, { shouldValidate: true }) // sincroniza com useForm
+                    }
+                  }}
+                  className="p-2 rounded-md border border-gray-300 text-text w-full"
+                  dateFormat="MMMM d, yyyy"
+                  maxDate={new Date()}
+                  placeholderText="Pick a date"
+                />
+
+                {errors?.birthDate && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.birthDate.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label htmlFor="date" className="text-sm font-semibold text-text">
-                Birth Date
-              </label>
-              <DatePicker
-                name="date"
-                id="date"
-                selected={startDate}
-                onChange={date => setStartDate(date)}
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
-                dateFormat="MMMM d, yyyy"
-                minDate={new Date()}
-                placeholderText="Pick a date"
-              />
+            {/* Cell phone and email */}
+            <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
+              <div className="flex flex-col w-full md:w-3/7 gap-2">
+                <label
+                  htmlFor="phone"
+                  className="text-sm font-semibold text-text"
+                >
+                  Phone:
+                </label>
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="Type your phone"
+                  {...register('phone')}
+                  value={phone}
+                  onChange={e => {
+                    const masked = e.target.value // ou Mask('+55 9 9999-9999', e.target.value)
+                    setPhone(masked)
+                    setValue('phone', masked, { shouldValidate: true })
+                  }}
+                  className="p-2 rounded-md border border-gray-300 text-text w-full"
+                />
+
+                {errors?.phone && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col w-full md:w-3/7 gap-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-semibold text-text"
+                >
+                  E-mail:
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  placeholder="Type your e-mail"
+                  {...register('email')}
+                  value={email}
+                  onChange={e => {
+                    const val = e.target.value
+                    setEmail(val)
+                    setValue('email', val, { shouldValidate: true })
+                  }}
+                  className="p-2 rounded-md border border-gray-300 text-text w-full"
+                />
+
+                {errors?.email && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col w-full md:w-3/7 gap-2">
+                <label
+                  htmlFor="createdAt"
+                  className="text-sm font-semibold text-text"
+                >
+                  Customer Since
+                </label>
+                <DatePicker
+                  id="createdAt"
+                  disabled
+                  selected={
+                    user?.user?.createdAt
+                      ? new Date(user?.user?.createdAt)
+                      : new Date()
+                  }
+                  {...register('createdAt')}
+                  onChange={() => {}}
+                  className="w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  dateFormat="MMMM d, yyyy"
+                  placeholderText="Pick a date"
+                />
+
+                {errors?.createdAt && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.createdAt.message}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Cell phone and email */}
-          <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label
-                htmlFor="phone"
-                className="text-sm font-semibold text-text"
-              >
-                Cell Phone:
-              </label>
-              <input
-                type="text"
-                name="phone"
-                id="phone"
-                placeholder="Type your cell phone"
-                // value="+55 79 99894-2110"
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
-              />
+            <div className="flex flex-row w-full justify-center">
+              <Button type="submit">Update Data</Button>
             </div>
+          </form>
 
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label
-                htmlFor="email"
-                className="text-sm font-semibold text-text"
-              >
-                E-mail:
-              </label>
-              <input
-                type="text"
-                name="email"
-                id="email"
-                placeholder="Type your e-mail"
-                // value="+55 79 99894-2110"
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
-              />
-            </div>
-
-            <div className="flex flex-col w-full md:w-3/7 gap-2">
-              <label htmlFor="date" className="text-sm font-semibold text-text">
-                Customer Since
-              </label>
-              <DatePicker
-                name="date"
-                id="date"
-                disabled
-                selected={startDate}
-                className="p-2 rounded-md border border-gray-300 text-text w-full"
-                dateFormat="MMMM d, yyyy"
-                placeholderText="Pick a date"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-row w-full justify-center">
-            <Button>Update Data</Button>
-          </div>
-
+          {/* Bookings */}
           <div className="flex flex-col w-full justify-center gap-2">
             <p className="text-text text-2xl text-bold text-center md:text-start">
               Appointments List
             </p>
-            <Table bookingData={[]} />
+            <Table bookingData={bookingData} />
           </div>
         </div>
         {/* End body */}

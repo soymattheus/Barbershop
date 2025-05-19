@@ -12,6 +12,8 @@ import Toast from '@/components/ui/toast'
 import { Register } from '@/http/api'
 import React from 'react'
 
+import { useAuth } from '@/hooks/auth'
+
 const subscriptionSchema = z.object({
   email: z.string().email('Enter a valid email'),
   password: z.string().min(6, {
@@ -26,6 +28,7 @@ type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export default function RegisterScreen() {
   const router = useRouter()
+  const { handleRegister } = useAuth()
   const [showPassword, setShowPassword] = React.useState(false)
   const {
     register,
@@ -40,7 +43,8 @@ export default function RegisterScreen() {
     password,
     confirmPassword,
   }: SubscriptionSchema) {
-    const data = await Register({ email, password, confirmPassword })
+    // const data = await Register({ email, password, confirmPassword })
+    handleRegister(email, password, confirmPassword)
   }
 
   const handleLoginScreen = () => {

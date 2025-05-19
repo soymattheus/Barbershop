@@ -28,7 +28,7 @@ export default function Select({
         name="service"
         value={selected}
         onChange={e => setSelected(e.target.value)}
-        className="p-2 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-primary text-text"
+        className="p-3 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-primary text-text"
       >
         <option value="" disabled>
           -- Select a {description.toLowerCase()} --

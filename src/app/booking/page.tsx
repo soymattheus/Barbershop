@@ -14,7 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { date, z } from 'zod'
+import { z } from 'zod'
 
 import GroupSelect from '@/components/ui/groupSelect'
 import Toast from '@/components/ui/toast'
@@ -25,9 +25,22 @@ const bookingSchema = z.object({
   name: z.string().min(1, {
     message: 'Name is required field',
   }),
-  date: z.date().refine(date => date >= new Date(), {
-    message: 'Date must be in the future',
-  }),
+  date: z
+    .date({
+      required_error: 'Date is required',
+      invalid_type_error: 'Invalid date',
+    })
+    .refine(
+      date => {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0) // zera hora, minuto, segundo e ms
+        return date >= today
+      },
+      {
+        message: 'Date must be today or in the future',
+      }
+    ),
+
   barber: z.string().min(1, {
     message: 'Barber is required field',
   }),
@@ -96,13 +109,16 @@ export default function Booking() {
           <Banner showNavigation page="Booking" />
 
           {/* Form */}
-          <form onSubmit={handleSubmit(handleBook)}>
+          <form
+            className="flex flex-col gap-6"
+            onSubmit={handleSubmit(handleBook)}
+          >
             {/* Name and date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-bold text-gray-700 mb-1"
                 >
                   Name
                 </label>
@@ -126,7 +142,7 @@ export default function Booking() {
               <div>
                 <label
                   htmlFor="date"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-bold text-gray-700 mb-1"
                 >
                   Select a Date
                 </label>
