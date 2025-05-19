@@ -1,3 +1,4 @@
+import type { User } from '@/types/user'
 import { toast } from 'react-toastify'
 import { nullable } from 'zod'
 
@@ -12,18 +13,6 @@ export type RegisterBody = {
   confirmPassword: string
 }
 
-/** @nullable */
-export type LoginEvent200 = {
-  token: string
-  user: {
-    id: string
-    name: string
-    email: string
-    createdAt: string
-    updatedAt: string
-  } | null
-}
-
 /**
  * @summary Login
  */
@@ -31,7 +20,7 @@ export type LoginEvent200 = {
 export const Login = async (
   LoginBody: LoginBody,
   options?: RequestInit
-): Promise<LoginEvent200> => {
+): Promise<User> => {
   const { email, password } = LoginBody
 
   if (email !== 'matheus@email.com' || password !== 'admin1') {
@@ -51,6 +40,8 @@ export const Login = async (
       id: '3f2504e0-4f89-11d3-9a0c-0305e82c3301',
       name: 'Matheus Tavares',
       email: 'matheus@email.com',
+      birthDate: '1990-01-01T00:00:00.000Z',
+      phone: '+55 21 9 9999-9999',
       createdAt: '2023-10-01T00:00:00.000Z',
       updatedAt: '2023-10-01T00:00:00.000Z',
     },
@@ -62,7 +53,7 @@ export const Login = async (
 export const Register = async (
   LoginBody: RegisterBody,
   options?: RequestInit
-): Promise<LoginEvent200> => {
+): Promise<User> => {
   const { email, password, confirmPassword } = LoginBody
   if (password !== confirmPassword) {
     toast('Passwords do not match!')
