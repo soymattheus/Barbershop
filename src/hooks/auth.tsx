@@ -80,7 +80,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (password === userExists?.user?.password) {
           data.user = userExists.user
           data.token = userExists.token
-          Cookies.set('token', userExists.token, { path: '/', expires: 1 })
+          Cookies.set('token', userExists.token || '', {
+            path: '/',
+            expires: 1,
+          })
           Cookies.set('user', JSON.stringify(userExists.user), {
             path: '/',
             expires: 1,
