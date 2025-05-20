@@ -44,7 +44,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleCloseModal = () => {
-    handleFetchBookingData()
     setModalIsOpen(false)
   }
 
