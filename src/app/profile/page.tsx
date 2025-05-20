@@ -8,14 +8,15 @@ import React, { useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
+import InputMask from 'react-input-mask'
 import { z } from 'zod'
 
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
+import { useBooking } from '@/providers/booking'
 import { useProfile } from '@/providers/profile'
 import { Mask } from '@/utils/mask'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { set } from 'date-fns'
 
 const profileSchema = z.object({
   name: z.string().min(1, {
@@ -75,11 +76,12 @@ export default function Profile() {
     setPhone,
     email,
     setEmail,
-    bookingData,
     handleUpdateUserData,
     name,
     setName,
+    handleFetchUserData,
   } = useProfile()
+  const { handleFetchBookingData, bookingData } = useBooking()
 
   const {
     register,
@@ -109,6 +111,11 @@ export default function Profile() {
       user?.user?.createdAt ? new Date(user.user.createdAt) : new Date()
     )
   }, [birthDate, phone, email, setValue, name, user?.user?.createdAt])
+
+  useEffect(() => {
+    handleFetchUserData()
+    handleFetchBookingData()
+  }, [handleFetchUserData, handleFetchBookingData])
 
   const handleUpdate = async () => {
     handleUpdateUserData()
@@ -184,9 +191,17 @@ export default function Profile() {
                     }
                   }}
                   className="p-2 rounded-md border border-gray-300 text-text w-full"
-                  dateFormat="MMMM d, yyyy"
+                  dateFormat="MM-dd-yyyy"
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode="select"
+                  yearDropdownItemNumber={100}
+                  scrollableYearDropdown
+                  yearItemNumber={15}
+                  minDate={new Date('1900-01-01')}
                   maxDate={new Date()}
                   placeholderText="Pick a date"
+                  autoComplete="off"
                 />
 
                 {errors?.birthDate && (
@@ -206,6 +221,7 @@ export default function Profile() {
                 >
                   Phone:
                 </label>
+
                 <input
                   type="text"
                   id="phone"
@@ -213,10 +229,14 @@ export default function Profile() {
                   {...register('phone')}
                   value={phone}
                   onChange={e => {
-                    const masked = e.target.value // ou Mask('+55 9 9999-9999', e.target.value)
+                    const masked = e.target.value.replace(
+                      /^(\d{2})(\d{5})(\d{4})$/,
+                      '+55 $1 $2-$3'
+                    ) // ou Mask('+55 9 9999-9999', e.target.value)
                     setPhone(masked)
                     setValue('phone', masked, { shouldValidate: true })
                   }}
+                  maxLength={17}
                   className="p-2 rounded-md border border-gray-300 text-text w-full"
                 />
 

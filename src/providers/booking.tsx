@@ -11,6 +11,7 @@ import React, {
   useState,
   useEffect,
   type ReactNode,
+  useCallback,
 } from 'react'
 import { toast } from 'react-toastify'
 
@@ -31,6 +32,7 @@ type BookingContextType = {
   handleOpenModal: () => void
   handleCloseModal: () => void
   bookingData: BookingData[]
+  handleFetchBookingData: () => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -326,7 +328,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const handleFetchBookingData = () => {
+  const handleFetchBookingData = useCallback(async () => {
     const user = Cookies.get('user')
     const userJson = user ? JSON.parse(user) : null
     const userId = userJson ? userJson?.id : ''
@@ -349,7 +351,32 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       setBookingData([])
       console.log('No booking data found.')
     }
-  }
+  }, [])
+
+  // const handleFetchBookingData = async () => {
+  //   const user = Cookies.get('user')
+  //   const userJson = user ? JSON.parse(user) : null
+  //   const userId = userJson ? userJson?.id : ''
+
+  //   if (!userId) {
+  //     console.log('No user ID found in cookies.')
+  //     return
+  //   }
+
+  //   const bookingDataString = localStorage.getItem('bookingData')
+  //   if (bookingDataString) {
+  //     const parsedBookingData: BookingData[] = JSON.parse(bookingDataString)
+
+  //     const userBookings = parsedBookingData.filter(
+  //       booking => booking.userId === userId
+  //     )
+  //     console.log('Fetched booking data:', userBookings)
+  //     setBookingData(userBookings)
+  //   } else {
+  //     setBookingData([])
+  //     console.log('No booking data found.')
+  //   }
+  // }
 
   return (
     <BookingContext.Provider
@@ -370,6 +397,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         handleOpenModal,
         handleCloseModal,
         bookingData,
+        handleFetchBookingData,
       }}
     >
       {children}
