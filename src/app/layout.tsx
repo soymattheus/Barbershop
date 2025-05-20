@@ -1,5 +1,4 @@
 import './globals.css'
-import ContextApp from '@/context'
 import AppProvider from '@/hooks'
 
 import type { Metadata } from 'next'
