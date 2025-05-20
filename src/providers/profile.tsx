@@ -1,16 +1,13 @@
 'use client'
 
-import Toast from '@/components/ui/toast'
-import type { BookingData } from '@/types/booking'
-import type { ServiceGroup } from '@/types/service'
-import type { User } from '@/types/user'
+import type { User, UserData } from '@/types/user'
 import Cookies from 'js-cookie'
 import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
   type ReactNode,
+  useCallback,
 } from 'react'
 import { toast } from 'react-toastify'
 
@@ -20,7 +17,6 @@ type ProfileContextType = {
   modalIsOpen: boolean
   handleOpenModal: () => void
   handleCloseModal: () => void
-  bookingData: BookingData[]
   handleFetchUserData: () => void
   birthDate: Date | null
   setBirthDate: React.Dispatch<React.SetStateAction<Date | null>>
@@ -38,17 +34,10 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined)
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const { handleFetchLocaleUserData } = useAuth()
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false)
-  const [bookingData, setBookingData] = useState<BookingData[]>([])
   const [birthDate, setBirthDate] = useState<Date | null>(null)
   const [phone, setPhone] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [name, setName] = useState<string>('')
-
-  useEffect(() => {
-    console.log('ProfileProvider mounted')
-    handleFetchBookingData()
-    handleFetchUserData()
-  }, [])
 
   const handleOpenModal = () => {
     setModalIsOpen(true)
@@ -59,9 +48,9 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     setModalIsOpen(false)
   }
 
-  const handleFetchUserData = async () => {
+  const handleFetchUserData = useCallback(async () => {
     const userString = Cookies.get('user')
-    const userData = userString ? JSON.parse(userString) : null
+    const userData = userString ? await JSON.parse(userString) : null
 
     if (userData) {
       setName(userData.name)
@@ -74,18 +63,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
       setPhone('')
       setEmail('')
     }
-  }
-
-  const handleFetchBookingData = () => {
-    const bookingDataString = localStorage.getItem('bookingData')
-    if (bookingDataString) {
-      const parsedBookingData: BookingData[] = JSON.parse(bookingDataString)
-      setBookingData(parsedBookingData)
-    } else {
-      setBookingData([])
-      //   toast.error('No booking data found.')
-    }
-  }
+  }, [])
 
   const handleUpdateUserData = async () => {
     const userString = Cookies.get('user')
@@ -105,15 +83,18 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         user: {
           id: users[userIndex]?.user?.id || '',
           name: name,
-          birthDate: birthDate ? new Date(birthDate) : '',
+          birthDate: birthDate ? new Date(birthDate).toDateString() : '',
           phone: phone,
           email: email,
           password: users[userIndex]?.user?.password || '',
-          createdAt: users[userIndex]?.user?.createdAt || new Date(),
-          updatedAt: new Date(),
+          createdAt: users[userIndex]?.user?.createdAt
+            ? new Date(users[userIndex]?.user?.createdAt).toDateString()
+            : '',
+          updatedAt: new Date().toDateString(),
         },
       }
-      console.log('updatedUser', updatedUser)
+
+      // Update the user data in local storage
       users[userIndex] = updatedUser
       localStorage.setItem('users', JSON.stringify(users))
       Cookies.set('user', JSON.stringify(updatedUser?.user))
@@ -130,7 +111,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         modalIsOpen,
         handleOpenModal,
         handleCloseModal,
-        bookingData,
         handleFetchUserData,
         birthDate,
         setBirthDate,
