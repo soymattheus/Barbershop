@@ -199,7 +199,6 @@ export default function Profile() {
                   id="birthDate"
                   value={birthDate || ''}
                   onChange={e => {
-                    console.log('date', e.target.value)
                     setBirthDate(e?.target?.value)
                     setValue('birthDate', new Date(e?.target?.value), {
                       shouldValidate: true,

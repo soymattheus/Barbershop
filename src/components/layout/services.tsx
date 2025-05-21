@@ -191,7 +191,6 @@ export default function Services() {
     )
     setSelectedService(category)
     setIsOpen(true)
-    console.log(category)
   }
 
   return (

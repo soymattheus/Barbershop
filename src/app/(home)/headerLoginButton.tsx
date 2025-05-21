@@ -12,14 +12,14 @@ export default function HeaderLoginButton({ className }: BookButtonProps) {
   const router = useRouter()
 
   const handleLogin = () => {
-    router.push('/login') // navega para a rota /booking
+    router.push('/login')
   }
 
   return (
     <button
       type="button"
       onClick={handleLogin}
-      className="flex items-center justify-center gap-2 cursor-pointer"
+      className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
     >
       <CircleUserRound className="size-6" />
       <p className="font-semibold">Log in</p>

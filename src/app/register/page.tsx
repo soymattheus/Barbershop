@@ -162,6 +162,8 @@ export default function RegisterScreen() {
           <p>Enter with your google account</p>
 
           <img
+            onClick={() => alert('This feature will be available soon')}
+            onKeyDown={() => alert('This feature will be available soon')}
             alt="Google"
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
             className="size-7 cursor-pointer"

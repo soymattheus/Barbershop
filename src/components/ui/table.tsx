@@ -69,7 +69,9 @@ export default function Table({ bookingData }: TableProps) {
                     <td className="px-4 py-2">
                       <Button
                         disabled={appointment?.status === 'completed'}
-                        onClick={() => alert('Cancel')}
+                        onClick={() =>
+                          alert('This feature will be available soon')
+                        }
                       >
                         Cancel
                       </Button>

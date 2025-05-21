@@ -294,7 +294,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const handleBookAppointment = async () => {
     const user = Cookies.get('user')
     if (!user) {
-      console.log('Please log in to book an appointment.')
+      toast.error('Please log in to book an appointment.')
       return
     }
     const userJson = JSON.parse(user)
@@ -326,7 +326,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       toast.success('Booking successful!')
     } catch (error) {
       toast.error('Error saving booking data. Please try again.')
-      console.error('Error saving booking data:', error)
     }
   }
 
@@ -336,7 +335,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     const userId = userJson ? userJson?.id : ''
 
     if (!userId) {
-      console.log('No user ID found in cookies.')
+      toast.error('No user ID found in cookies.')
       return
     }
 
@@ -347,11 +346,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       const userBookings = parsedBookingData.filter(
         booking => booking.userId === userId
       )
-      console.log('Fetched booking data:', userBookings)
       setBookingData(userBookings)
     } else {
       setBookingData([])
-      console.log('No booking data found.')
     }
   }, [])
 
