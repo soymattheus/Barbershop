@@ -76,6 +76,7 @@ export default function Booking() {
     handleOpenModal,
     handleCloseModal,
     bookingData,
+    handleFetchBookingData,
   } = useBooking()
   const {
     register,
@@ -111,6 +112,10 @@ export default function Booking() {
     setValue,
     setSelectedDate,
   ])
+
+  useEffect(() => {
+    handleFetchBookingData()
+  }, [handleFetchBookingData])
 
   const handleBook = () => {
     handleOpenModal()

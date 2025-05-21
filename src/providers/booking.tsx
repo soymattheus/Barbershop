@@ -54,7 +54,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     handleFetchBarbers()
     handleFetchAvaliableTimes()
     handleFetchServices()
-    handleFetchBookingData()
   }, [])
 
   const handleFetchBarbers = async () => {
