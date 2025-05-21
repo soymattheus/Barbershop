@@ -209,7 +209,7 @@ export default function Profile() {
                   max={new Date()?.toISOString()?.split('T')[0]}
                   autoComplete="off"
                   data-error={!!errors?.birthDate}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
 
                 {errors?.birthDate && (
