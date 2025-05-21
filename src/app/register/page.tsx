@@ -1,16 +1,14 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { InputField, InputIcon, InputRoot } from '@/components/ui/input'
+import Toast from '@/components/ui/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-
-import { InputField, InputIcon, InputRoot } from '@/components/ui/input'
-import Toast from '@/components/ui/toast'
-import { Register } from '@/http/api'
-import React from 'react'
 
 import { useAuth } from '@/hooks/auth'
 
