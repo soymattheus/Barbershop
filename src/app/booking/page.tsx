@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
 import Select from '@/components/ui/select'
 import Table from '@/components/ui/table'
-import React from 'react'
-import DatePicker from 'react-datepicker'
+import React, { useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,6 +19,7 @@ import GroupSelect from '@/components/ui/groupSelect'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 import { useBooking } from '@/providers/booking'
+import { useRouter } from 'next/navigation'
 
 const bookingSchema = z.object({
   name: z.string().min(1, {
@@ -32,8 +32,12 @@ const bookingSchema = z.object({
     })
     .refine(
       date => {
+        date.setDate(date.getDate() + 1) // Adiciona um dia para comparar com a data atual
+        console.log('date', date)
+
         const today = new Date()
         today.setHours(0, 0, 0, 0) // zera hora, minuto, segundo e ms
+        console.log('today', today)
         return date >= today
       },
       {
@@ -55,6 +59,7 @@ const bookingSchema = z.object({
 type BookingSchema = z.infer<typeof bookingSchema>
 
 export default function Booking() {
+  const router = useRouter()
   const { user } = useAuth()
   const {
     professionals,
@@ -77,24 +82,37 @@ export default function Booking() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<BookingSchema>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       name: user?.user?.name || '',
-      date: selectedDate || new Date(),
-      barber: selectedBarber,
-      service: selectedService,
-      time: selectedTime,
-    },
-    values: {
-      name: user?.user?.name || '',
-      date: selectedDate || new Date(),
+      date: selectedDate ? new Date(selectedDate) : new Date(),
       barber: selectedBarber,
       service: selectedService,
       time: selectedTime,
     },
   })
+
+  useEffect(() => {
+    setValue('name', user?.user?.name || '')
+    setValue('date', selectedDate ? new Date(selectedDate) : new Date())
+    setSelectedDate(
+      selectedDate ? selectedDate : new Date().toISOString().split('T')[0]
+    )
+    setValue('barber', selectedBarber)
+    setValue('service', selectedService)
+    setValue('time', selectedTime)
+  }, [
+    user?.user?.name,
+    selectedDate,
+    selectedBarber,
+    selectedService,
+    selectedTime,
+    setValue,
+    setSelectedDate,
+  ])
 
   const handleBook = () => {
     handleOpenModal()
@@ -107,6 +125,21 @@ export default function Booking() {
         <Toast />
         <div className="flex flex-col px-6 md:px-12 py-10 gap-10">
           <Banner showNavigation page="Booking" />
+
+          {!user?.user?.name && (
+            <div className="flex flex-col gap-0">
+              <h1 className="text-xl font-bold text-danger mb-4 text-center md:text-left">
+                Please complete your profile to book an appointment
+              </h1>
+              <p
+                className="hover:underline cursor-pointer text-primary"
+                onClick={() => router.push('/profile')}
+                onKeyDown={() => router.push('/profile')}
+              >
+                Go to profile page
+              </p>
+            </div>
+          )}
 
           {/* Form */}
           <form
@@ -146,17 +179,23 @@ export default function Booking() {
                 >
                   Select a Date
                 </label>
-                <DatePicker
+
+                <input
+                  type="date"
                   id="date"
-                  selected={selectedDate}
-                  {...register('date')}
-                  onChange={date => {
-                    setSelectedDate(date)
+                  value={selectedDate || ''}
+                  onChange={e => {
+                    console.log('date', e.target.value)
+                    setSelectedDate(e?.target?.value)
+                    setValue('date', new Date(e?.target?.value), {
+                      shouldValidate: true,
+                    })
                   }}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  dateFormat="MMMM d, yyyy"
-                  minDate={new Date()}
-                  placeholderText="Pick a date"
+                  placeholder="MM-DD-YYYY"
+                  min={new Date()?.toISOString()?.split('T')[0]}
+                  autoComplete="off"
+                  data-error={!!errors?.date}
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.date && (
@@ -252,7 +291,7 @@ export default function Booking() {
             </p>
             <p>
               <span className="font-semibold">Date:</span>{' '}
-              <span className="italic">{selectedDate?.toDateString()}</span>
+              <span className="italic">{selectedDate}</span>
             </p>
             <p>
               <span className="font-semibold">Time:</span>{' '}

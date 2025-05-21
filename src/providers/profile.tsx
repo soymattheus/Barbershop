@@ -12,14 +12,15 @@ import React, {
 import { toast } from 'react-toastify'
 
 import { useAuth } from '@/hooks/auth'
+import formatDate from '@/utils/dateFormat'
 
 type ProfileContextType = {
   modalIsOpen: boolean
   handleOpenModal: () => void
   handleCloseModal: () => void
   handleFetchUserData: () => void
-  birthDate: Date | null
-  setBirthDate: React.Dispatch<React.SetStateAction<Date | null>>
+  birthDate: string | null
+  setBirthDate: React.Dispatch<React.SetStateAction<string | null>>
   phone: string
   setPhone: React.Dispatch<React.SetStateAction<string>>
   email: string
@@ -34,7 +35,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined)
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const { handleFetchLocaleUserData } = useAuth()
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false)
-  const [birthDate, setBirthDate] = useState<Date | null>(null)
+  const [birthDate, setBirthDate] = useState<string | null>(null)
   const [phone, setPhone] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [name, setName] = useState<string>('')
@@ -53,7 +54,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
     if (userData) {
       setName(userData.name)
-      setBirthDate(userData.birthDate)
+      setBirthDate(formatDate(userData.birthDate))
       setPhone(userData.phone)
       setEmail(userData.email)
     } else {
@@ -82,7 +83,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         user: {
           id: users[userIndex]?.user?.id || '',
           name: name,
-          birthDate: birthDate ? new Date(birthDate).toDateString() : '',
+          birthDate: birthDate || '',
           phone: phone,
           email: email,
           password: users[userIndex]?.user?.password || '',
@@ -90,6 +91,9 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
             ? new Date(users[userIndex]?.user?.createdAt).toDateString()
             : '',
           updatedAt: new Date().toDateString(),
+          loyaltyPackage: users[userIndex]?.user?.loyaltyPackage || '',
+          avaliableServicesNumber:
+            users[userIndex]?.user?.avaliableServicesNumber || 0,
         },
       }
 

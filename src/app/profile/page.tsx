@@ -8,15 +8,14 @@ import React, { useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { z } from 'zod'
 
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 import { useBooking } from '@/providers/booking'
 import { useProfile } from '@/providers/profile'
-import { Mask } from '@/utils/mask'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 
 const profileSchema = z.object({
   name: z.string().min(1, {
@@ -68,6 +67,7 @@ const profileSchema = z.object({
 type ProfileSchema = z.infer<typeof profileSchema>
 
 export default function Profile() {
+  const router = useRouter()
   const { user } = useAuth()
   const {
     birthDate,
@@ -95,7 +95,7 @@ export default function Profile() {
       createdAt: user?.user?.createdAt
         ? new Date(user.user.createdAt)
         : new Date(),
-      birthDate: birthDate || new Date(),
+      birthDate: birthDate ? new Date(birthDate) : new Date(),
       phone: phone || '',
       email: email || '',
     },
@@ -129,14 +129,26 @@ export default function Profile() {
         <div className="flex flex-col px-6 gap-4 md:gap-10">
           <Banner showNavigation page="Profile" />
 
-          <div className="flex flex-col w-full gap-1">
+          <div className="flex flex-col gap-1">
             <p className="text-text">
               Your current loyalty package:{' '}
-              <span className="text-primary font-bold">semi-annual</span>
+              <span className="text-primary font-bold">
+                {user?.user?.loyaltyPackage || "you don't have one yet"}
+              </span>
             </p>
-            <p className="text-primary text-sm hover:underline cursor-pointer">
-              Click here to see more packages
-            </p>
+            <div className="flex flex-row gap-1">
+              <p
+                onClick={() => {
+                  router.push('/pricing')
+                }}
+                onKeyDown={() => {
+                  router.push('/pricing')
+                }}
+                className="text-primary text-sm hover:underline cursor-pointer"
+              >
+                Click here to see our packages
+              </p>
+            </div>
           </div>
 
           <form
@@ -155,7 +167,6 @@ export default function Profile() {
                 <input
                   type="text"
                   id="name"
-                  // disabled
                   {...register('name')}
                   value={name}
                   onChange={e => {
@@ -164,7 +175,8 @@ export default function Profile() {
                     setValue('name', val, { shouldValidate: true })
                   }}
                   placeholder="Enter your name"
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  data-error={!!errors?.name}
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.name && (
@@ -181,27 +193,24 @@ export default function Profile() {
                 >
                   Birth Date
                 </label>
-                <DatePicker
+
+                <input
+                  type="date"
                   id="birthDate"
-                  selected={birthDate}
-                  onChange={date => {
-                    if (date) {
-                      setBirthDate(date)
-                      setValue('birthDate', date, { shouldValidate: true }) // sincroniza com useForm
-                    }
+                  value={birthDate || ''}
+                  onChange={e => {
+                    console.log('date', e.target.value)
+                    setBirthDate(e?.target?.value)
+                    setValue('birthDate', new Date(e?.target?.value), {
+                      shouldValidate: true,
+                    })
                   }}
-                  className="p-2 rounded-md border border-gray-300 text-text w-full"
-                  dateFormat="MM-dd-yyyy"
-                  showYearDropdown
-                  showMonthDropdown
-                  dropdownMode="select"
-                  yearDropdownItemNumber={100}
-                  scrollableYearDropdown
-                  yearItemNumber={15}
-                  minDate={new Date('1900-01-01')}
-                  maxDate={new Date()}
-                  placeholderText="Pick a date"
+                  placeholder="MM-DD-YYYY"
+                  min="1900-01-01"
+                  max={new Date()?.toISOString()?.split('T')[0]}
                   autoComplete="off"
+                  data-error={!!errors?.birthDate}
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.birthDate && (
@@ -232,12 +241,13 @@ export default function Profile() {
                     const masked = e.target.value.replace(
                       /^(\d{2})(\d{5})(\d{4})$/,
                       '+55 $1 $2-$3'
-                    ) // ou Mask('+55 9 9999-9999', e.target.value)
+                    )
                     setPhone(masked)
                     setValue('phone', masked, { shouldValidate: true })
                   }}
                   maxLength={17}
-                  className="p-2 rounded-md border border-gray-300 text-text w-full"
+                  data-error={errors?.phone}
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.phone && (
@@ -265,7 +275,8 @@ export default function Profile() {
                     setEmail(val)
                     setValue('email', val, { shouldValidate: true })
                   }}
-                  className="p-2 rounded-md border border-gray-300 text-text w-full"
+                  data-error={!!errors?.email}
+                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.email && (
