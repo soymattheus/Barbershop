@@ -100,18 +100,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         toast.error('User not found')
       }
-
-      // const userData = data.user
-      // const token = data.token
-
-      // if (userData && token) {
-      //   Cookies.set('token', token, { path: '/', expires: 1 })
-      //   Cookies.set('user', JSON.stringify(userData), { path: '/', expires: 1 })
-
-      //   setUser({ token, user: userData })
-
-      //   router.push('/portal')
-      // }
     } catch (error) {
       console.error('Login failed:', error)
     }
@@ -195,9 +183,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser({ ...user, user: userToUpdate.user })
             toast.success('Loyalty package updated successfully')
           }
-          // localStorage.setItem('users', JSON.stringify(users))
-          // const updatedUser = { ...userData, user: { ...userData.user, loyaltyPackage: loyaltyPack } }
-          // setUser(updatedUser)
         }
       }
     } catch (error) {
