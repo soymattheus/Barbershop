@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleFetchLocaleUserData = async () => {
     const userString = Cookies.get('user')
-    console.log('userString', userString)
     const userData = userString ? JSON.parse(userString) : null
     if (userData) {
       setUser({
@@ -77,7 +76,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         ? JSON.parse(localStorage.getItem('users') || '')
         : []
 
-      const userExists = users.find((user: User) => user?.user?.email === email)
+      const userExists = users.find(
+        (user: User) =>
+          user?.user?.email?.toLocaleLowerCase() === email?.toLocaleLowerCase()
+      )
       if (userExists) {
         if (password === userExists?.user?.password) {
           data.user = userExists.user
@@ -180,7 +182,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (userToUpdate) {
           if (userToUpdate?.user) {
             userToUpdate.user.loyaltyPackage = loyaltyPack
-            console.log('userToUpdate', userToUpdate)
             Cookies.set('user', JSON.stringify(userToUpdate.user), {
               path: '/',
               expires: 1,

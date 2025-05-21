@@ -33,11 +33,9 @@ const bookingSchema = z.object({
     .refine(
       date => {
         date.setDate(date.getDate() + 1) // Adiciona um dia para comparar com a data atual
-        console.log('date', date)
 
         const today = new Date()
         today.setHours(0, 0, 0, 0) // zera hora, minuto, segundo e ms
-        console.log('today', today)
         return date >= today
       },
       {
@@ -185,7 +183,6 @@ export default function Booking() {
                   id="date"
                   value={selectedDate || ''}
                   onChange={e => {
-                    console.log('date', e.target.value)
                     setSelectedDate(e?.target?.value)
                     setValue('date', new Date(e?.target?.value), {
                       shouldValidate: true,
