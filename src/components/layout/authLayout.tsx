@@ -79,7 +79,7 @@ export default function AuthLayout({ children }: DrawerProps) {
               <button
                 onClick={handlePortal}
                 type="button"
-                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+                className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
               >
                 <Home className="text-yellow-400 w-5 h-5" />
                 <span className="text-sm font-medium">Home</span>
@@ -91,7 +91,7 @@ export default function AuthLayout({ children }: DrawerProps) {
                 <button
                   type="button"
                   onClick={handleProfile}
-                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
                 >
                   <UserCircle className="text-yellow-400 w-5 h-5" />
                   <span className="text-sm font-medium">Profile</span>
@@ -100,7 +100,7 @@ export default function AuthLayout({ children }: DrawerProps) {
                 <button
                   onClick={handlePricing}
                   type="button"
-                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
                 >
                   <CircleDollarSign className="text-yellow-400 w-5 h-5" />
                   <span className="text-sm font-medium">Pricing</span>
@@ -109,7 +109,7 @@ export default function AuthLayout({ children }: DrawerProps) {
                 <button
                   onClick={handleGalery}
                   type="button"
-                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
                 >
                   <Images className="text-yellow-400 w-5 h-5" />
                   <span className="text-sm font-medium">Gallery</span>
@@ -118,7 +118,7 @@ export default function AuthLayout({ children }: DrawerProps) {
                 <button
                   onClick={handleAboutUs}
                   type="button"
-                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+                  className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
                 >
                   <Users className="text-yellow-400 w-5 h-5" />
                   <span className="text-sm font-medium">About Us</span>
@@ -129,7 +129,7 @@ export default function AuthLayout({ children }: DrawerProps) {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition"
+              className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-white/10 transition hover:cursor-pointer"
             >
               <LogOut className="text-red-400 w-5 h-5" />
               <span className="text-sm font-medium text-red-200">Logout</span>
