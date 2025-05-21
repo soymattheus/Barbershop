@@ -8,6 +8,7 @@ interface GroupSelectProps {
   services: ServiceGroup[]
   selected: string
   setSelected: (value: string) => void
+  error?: boolean
 }
 
 export default function GroupSelect({
@@ -15,6 +16,7 @@ export default function GroupSelect({
   services,
   selected,
   setSelected,
+  error,
 }: GroupSelectProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -25,18 +27,24 @@ export default function GroupSelect({
         id="service"
         value={selected}
         onChange={e => setSelected(e.target.value || '')}
-        className="p-3 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-primary text-text"
+        data-error={error}
+        className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
       >
         <option value="" disabled>
           -- Select a {description.toLowerCase()} --
         </option>
 
         {services.map(category => (
-          <optgroup key={category.title} label={category.title}>
+          <optgroup
+            key={category.title}
+            label={category.title}
+            className="text-gray-500"
+          >
             {category.services.map(service => (
               <option
                 key={service.name}
                 value={`${service.name} - $${service.price}`}
+                className="text-gray-700"
               >
                 {service.name} - ${service.price}
               </option>

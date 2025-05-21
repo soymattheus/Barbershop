@@ -165,7 +165,8 @@ export default function Booking() {
                   value={user?.user?.name || ''}
                   {...register('name')}
                   placeholder="Enter your name"
-                  className="w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  data-error={!!errors?.name}
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.name && (
@@ -197,7 +198,7 @@ export default function Booking() {
                   min={new Date()?.toISOString()?.split('T')[0]}
                   autoComplete="off"
                   data-error={!!errors?.date}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.date && (
@@ -217,6 +218,7 @@ export default function Booking() {
                   selected={selectedService}
                   setSelected={setSelectedService}
                   {...register('service')}
+                  error={!!errors.service}
                 />
                 {errors?.service && (
                   <p className="text-danger font-semibold text-xs">
@@ -231,6 +233,7 @@ export default function Booking() {
                   selected={selectedTime}
                   setSelected={setSelectedTime}
                   {...register('time')}
+                  error={!!errors.time}
                 />
                 {errors?.time && (
                   <p className="text-danger font-semibold text-xs">
@@ -245,6 +248,7 @@ export default function Booking() {
                   selected={selectedBarber}
                   setSelected={setSelectedBarber}
                   {...register('barber')}
+                  error={!!errors.barber}
                 />
                 {errors?.barber && (
                   <p className="text-danger font-semibold text-xs">
