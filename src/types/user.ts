@@ -7,6 +7,8 @@ export type UserData = {
   phone: string
   createdAt: string
   updatedAt: string
+  loyaltyPackage: string
+  avaliableServicesNumber: number
 }
 
 export type User = {

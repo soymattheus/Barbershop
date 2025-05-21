@@ -2,6 +2,33 @@ import AuthLayout from '@/components/layout/authLayout'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 
+const barbers = [
+  {
+    id: '1',
+    name: 'José Hernandez',
+    specialty: 'Fade Specialist',
+    img: '/images/barber01.avif',
+  },
+  {
+    id: '2',
+    name: 'Don Corte',
+    specialty: 'Beard Expert',
+    img: '/images/barber02.avif',
+  },
+  {
+    id: '3',
+    name: 'Carlos El Caballero',
+    specialty: 'Hair Color Specialist',
+    img: '/images/barber03.webp',
+  },
+  {
+    id: '4',
+    name: 'Miguel El Artista',
+    specialty: 'Creative Styles',
+    img: '/images/barber04.png',
+  },
+]
+
 export default function AboutUs() {
   return (
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
@@ -44,7 +71,7 @@ export default function AboutUs() {
               </h2>
               <p>
                 Premium products, personalized service, and a vibe that makes
-                you feel right at home — that’s the Barber Bros way.
+                you feel right at home — that’s the Barrio Barber's way.
               </p>
             </div>
           </div>
@@ -56,18 +83,18 @@ export default function AboutUs() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {/* Example barber card */}
-              {[1, 2, 3, 4].map(i => (
+              {barbers.map(i => (
                 <div
-                  key={i}
+                  key={i?.id}
                   className="flex flex-col items-center bg-white shadow rounded p-4"
                 >
                   <img
-                    src="/images/dominicanBarber.avif"
-                    alt={`Barber ${i}`}
+                    src={i?.img}
+                    alt={`Barber ${i?.name}`}
                     className="w-24 h-24 rounded-full object-cover mb-2"
                   />
-                  <p className="font-semibold text-lg">José Hernandez</p>
-                  <p className="text-sm text-gray-500">Fade Specialist</p>
+                  <p className="font-semibold text-lg">{i?.name}</p>
+                  <p className="text-sm text-gray-500">{i?.specialty}</p>
                 </div>
               ))}
             </div>

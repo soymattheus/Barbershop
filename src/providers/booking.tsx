@@ -1,10 +1,8 @@
 'use client'
 
-import Toast from '@/components/ui/toast'
 import type { BookingData } from '@/types/booking'
 import type { ServiceGroup } from '@/types/service'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/navigation'
 import React, {
   createContext,
   useContext,
@@ -19,8 +17,8 @@ type BookingContextType = {
   professionals: { value: string; label: string }[]
   services: ServiceGroup[]
   time: { value: string; label: string }[]
-  selectedDate: Date | null
-  setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>
+  selectedDate: string | null
+  setSelectedDate: React.Dispatch<React.SetStateAction<string | null>>
   selectedService: string
   setSelectedService: React.Dispatch<React.SetStateAction<string>>
   selectedTime: string
@@ -43,8 +41,8 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   >([])
   const [services, setServices] = useState<ServiceGroup[]>([])
   const [time, setTime] = useState<{ value: string; label: string }[]>([])
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date()
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(
+    new Date().toISOString().split('T')[0]
   )
   const [selectedService, setSelectedService] = React.useState<string>('')
   const [selectedTime, setSelectedTime] = React.useState<string>('')
@@ -62,9 +60,10 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const handleFetchBarbers = async () => {
     try {
       const data = [
+        { value: 'José Hernandez', label: 'José Hernandez' },
         { value: 'Don Corte', label: 'Don Corte' },
         { value: 'El Caballero', label: 'El Caballero' },
-        { value: 'José Hernandez', label: 'José Hernandez' },
+        { value: 'El Artista', label: 'El Artista' },
       ]
       setProfessionals(data)
     } catch (error) {
@@ -286,7 +285,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const handleCloseModal = () => {
     handleFetchBookingData()
     setModalIsOpen(false)
-    setSelectedDate(new Date())
+    setSelectedDate(new Date().toISOString().split('T')[0])
     setSelectedService('')
     setSelectedTime('')
     setSelectedBarber('')
@@ -301,11 +300,14 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     const userJson = JSON.parse(user)
     const userId = userJson?.id
 
+    const date = selectedDate ? new Date(selectedDate) : new Date()
+    date.setDate(date.getDate() + 1)
+
     const bookingData: BookingData = {
       id: `appt_${Date.now()}`,
       userId: userId,
       barber: selectedBarber,
-      date: selectedDate,
+      date: date.toISOString().split('T')[0],
       time: selectedTime,
       service: selectedService,
       status: 'pending',
@@ -352,31 +354,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       console.log('No booking data found.')
     }
   }, [])
-
-  // const handleFetchBookingData = async () => {
-  //   const user = Cookies.get('user')
-  //   const userJson = user ? JSON.parse(user) : null
-  //   const userId = userJson ? userJson?.id : ''
-
-  //   if (!userId) {
-  //     console.log('No user ID found in cookies.')
-  //     return
-  //   }
-
-  //   const bookingDataString = localStorage.getItem('bookingData')
-  //   if (bookingDataString) {
-  //     const parsedBookingData: BookingData[] = JSON.parse(bookingDataString)
-
-  //     const userBookings = parsedBookingData.filter(
-  //       booking => booking.userId === userId
-  //     )
-  //     console.log('Fetched booking data:', userBookings)
-  //     setBookingData(userBookings)
-  //   } else {
-  //     setBookingData([])
-  //     console.log('No booking data found.')
-  //   }
-  // }
 
   return (
     <BookingContext.Provider

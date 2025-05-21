@@ -12,7 +12,7 @@ import React, {
 } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import type { User } from '@/types/user'
+import type { User, UserData } from '@/types/user'
 import { toast } from 'react-toastify'
 
 type AuthContextType = {
@@ -26,6 +26,7 @@ type AuthContextType = {
     confirmPassword: string
   ) => Promise<void>
   handleFetchLocaleUserData: () => Promise<void>
+  handleSetLoyaltyPackage: (loyaltyPack: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -68,6 +69,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           phone: '',
           createdAt: '',
           updatedAt: '',
+          loyaltyPackage: '',
+          avaliableServicesNumber: 0,
         },
       }
 
@@ -149,6 +152,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           phone: '',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          loyaltyPackage: '',
+          avaliableServicesNumber: 0,
         },
       }
       users.push(newUser)
@@ -161,6 +166,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const handleSetLoyaltyPackage = async (loyaltyPack: string) => {
+    try {
+      const userString = Cookies.get('user')
+      const userData: UserData = userString ? JSON.parse(userString) : null
+      if (userData) {
+        const users: User[] = localStorage.getItem('users')
+          ? JSON.parse(localStorage.getItem('users') || '')
+          : []
+        const userToUpdate = users.find(
+          (user: User) => user?.user?.id === userData?.id
+        )
+
+        if (userToUpdate) {
+          if (userToUpdate?.user) {
+            userToUpdate.user.loyaltyPackage = loyaltyPack
+            console.log('userToUpdate', userToUpdate)
+            Cookies.set('user', JSON.stringify(userToUpdate.user), {
+              path: '/',
+              expires: 1,
+            })
+
+            //Update the user in localStorage
+            const updatedUsers = users.map((user: User) =>
+              user?.user?.id === userToUpdate?.user?.id ? userToUpdate : user
+            )
+            localStorage.setItem('users', JSON.stringify(updatedUsers))
+            setUser({ ...user, user: userToUpdate.user })
+            toast.success('Loyalty package updated successfully')
+          }
+          // localStorage.setItem('users', JSON.stringify(users))
+          // const updatedUser = { ...userData, user: { ...userData.user, loyaltyPackage: loyaltyPack } }
+          // setUser(updatedUser)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to set loyalty package:', error)
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -170,6 +214,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleLogout,
         handleRegister,
         handleFetchLocaleUserData,
+        handleSetLoyaltyPackage,
       }}
     >
       {children}

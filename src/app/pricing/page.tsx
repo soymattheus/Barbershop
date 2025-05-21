@@ -8,10 +8,15 @@ import { Button } from '@/components/ui/button'
 import type React from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 
+import Toast from '@/components/ui/toast'
+import { useAuth } from '@/hooks/auth'
+
 export default function Pricing() {
+  const { handleSetLoyaltyPackage } = useAuth()
   return (
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
+        <Toast />
         {/* Body */}
         <div className="flex flex-col px-6 gap-8 md:gap-12 py-10">
           <Banner showNavigation page="Pricing" />
@@ -39,7 +44,12 @@ export default function Pricing() {
                 <PlanDetails plan="monthly" />
 
                 <div className="flex w-full items-center justify-center pt-4">
-                  <Button className="w-full">Get Now</Button>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSetLoyaltyPackage('monthly')}
+                  >
+                    Get Now
+                  </Button>
                 </div>
               </div>
             </div>
@@ -65,7 +75,12 @@ export default function Pricing() {
                 <PlanDetails plan="semiannual" />
 
                 <div className="flex w-full items-center justify-center pt-4">
-                  <Button className="w-full">Get Now</Button>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSetLoyaltyPackage('semiannual')}
+                  >
+                    Get Now
+                  </Button>
                 </div>
               </div>
             </div>
@@ -91,7 +106,12 @@ export default function Pricing() {
                 <PlanDetails plan="annual" />
 
                 <div className="flex w-full items-center justify-center pt-4">
-                  <Button className="w-full">Get Now</Button>
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSetLoyaltyPackage('annual')}
+                  >
+                    Get Now
+                  </Button>
                 </div>
               </div>
             </div>
