@@ -14,6 +14,8 @@ import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks/auth'
 import formatDate from '@/utils/dateFormat'
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
 type ProfileContextType = {
   modalIsOpen: boolean
   handleOpenModal: () => void
@@ -33,7 +35,7 @@ type ProfileContextType = {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined)
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
-  const { handleFetchLocaleUserData } = useAuth()
+  const { handleFetchLocaleUserData, setIsloading } = useAuth()
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false)
   const [birthDate, setBirthDate] = useState<string | null>(null)
   const [phone, setPhone] = useState<string>('')
@@ -49,62 +51,91 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleFetchUserData = useCallback(async () => {
-    const userString = Cookies.get('user')
-    const userData = userString ? await JSON.parse(userString) : null
+    try {
+      const userCookies = Cookies.get('user')
+      const userData = userCookies ? await JSON.parse(userCookies) : null
 
-    if (userData) {
-      setName(userData.name)
-      setBirthDate(formatDate(userData.birthDate))
-      setPhone(userData.phone)
-      setEmail(userData.email)
-    } else {
-      setName('')
-      setBirthDate(null)
-      setPhone('')
-      setEmail('')
+      if (userData) {
+        setName(userData.name)
+        setBirthDate(formatDate(userData.birthDate))
+        setPhone(userData.phone)
+        setEmail(userData.email)
+      } else {
+        setName('')
+        setBirthDate(null)
+        setPhone('')
+        setEmail('')
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+      toast.error('Failed to fetch user data.')
     }
   }, [])
 
   const handleUpdateUserData = async () => {
-    const userString = Cookies.get('user')
-    const user = userString ? JSON.parse(userString) : null
-    if (!user) {
-      toast.error('User not found.')
-    }
+    try {
+      setIsloading(true)
+      const userCookies = Cookies.get('user')
+      const user = userCookies ? JSON.parse(userCookies) : null
+      const userId = user.id
 
-    const id = user.id
-    const users: User[] = localStorage.getItem('users')
-      ? JSON.parse(localStorage.getItem('users') || '')
-      : []
-    const userIndex = users.findIndex(user => user?.user?.id === id)
-    if (userIndex !== -1) {
-      const updatedUser = {
-        ...users[userIndex],
-        user: {
-          id: users[userIndex]?.user?.id || '',
+      const response = await fetch(`${apiUrl}/user/update/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        // body: JSON.stringify({ loyaltyPackage: loyaltyPack }),
+        body: JSON.stringify({
+          ...user,
           name: name,
-          birthDate: birthDate || '',
+          birthDate: birthDate,
           phone: phone,
           email: email,
-          password: users[userIndex]?.user?.password || '',
-          createdAt: users[userIndex]?.user?.createdAt
-            ? new Date(users[userIndex]?.user?.createdAt).toDateString()
-            : '',
-          updatedAt: new Date().toDateString(),
-          loyaltyPackage: users[userIndex]?.user?.loyaltyPackage || '',
-          avaliableServicesNumber:
-            users[userIndex]?.user?.avaliableServicesNumber || 0,
-        },
+        }),
+      })
+      if (response.status !== 200) {
+        setIsloading(false)
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
+          }
+        }
       }
-
-      // Update the user data in local storage
-      users[userIndex] = updatedUser
-      localStorage.setItem('users', JSON.stringify(users))
-      Cookies.set('user', JSON.stringify(updatedUser?.user))
-      handleFetchLocaleUserData()
-      toast.success('User data updated successfully.')
-    } else {
-      toast.error('Failed to update user data.')
+      if (response.status === 200) {
+        const responseData = await response.json()
+        Cookies.set(
+          'user',
+          JSON.stringify({
+            ...user,
+            name: name,
+            birthDate: birthDate,
+            phone: phone,
+            email: email,
+          }),
+          {
+            path: '/',
+            expires: 1,
+          }
+        )
+        handleFetchLocaleUserData()
+        toast.success('Loyalty package updated successfully')
+        setIsloading(false)
+        return responseData
+      }
+    } catch (error) {
+      console.error('Failed to update user:', error)
     }
   }
 

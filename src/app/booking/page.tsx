@@ -77,6 +77,7 @@ export default function Booking() {
     handleCloseModal,
     bookingData,
     handleFetchBookingData,
+    handleFetchBarbers,
   } = useBooking()
   const {
     register,
@@ -115,10 +116,10 @@ export default function Booking() {
 
   useEffect(() => {
     handleFetchBookingData()
-  }, [handleFetchBookingData])
+    handleFetchBarbers()
+  }, [handleFetchBookingData, handleFetchBarbers])
 
   const handleBook = () => {
-    handleOpenModal()
     handleBookAppointment()
   }
 
@@ -212,6 +213,7 @@ export default function Booking() {
             {/* Service, Time, Professional */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
+                {/* Service */}
                 <GroupSelect
                   description="Service"
                   services={services}
@@ -226,6 +228,8 @@ export default function Booking() {
                   </p>
                 )}
               </div>
+
+              {/* Time */}
               <div>
                 <Select
                   description="Time"
@@ -241,10 +245,15 @@ export default function Booking() {
                   </p>
                 )}
               </div>
+
+              {/* Professional */}
               <div>
                 <Select
                   description="Professional"
-                  data={professionals}
+                  data={professionals?.map(item => ({
+                    value: item?.idBarber,
+                    label: item?.name,
+                  }))}
                   selected={selectedBarber}
                   setSelected={setSelectedBarber}
                   {...register('barber')}

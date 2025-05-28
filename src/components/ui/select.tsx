@@ -1,7 +1,4 @@
 'use client'
-import type { FieldError } from 'react-hook-form'
-
-// se estiver usando App Router
 
 interface OptionProps {
   value: string
@@ -39,11 +36,12 @@ export default function Select({
         <option value="" disabled>
           -- Select a {description.toLowerCase()} --
         </option>
-        {data.map((item, index) => (
-          <option key={index} value={item.value} className="text-gray-700">
-            {item.label}
-          </option>
-        ))}
+        {data.length > 0 &&
+          data?.map((item, index) => (
+            <option key={index} value={item?.value} className="text-gray-700">
+              {item.label}
+            </option>
+          ))}
       </select>
     </div>
   )

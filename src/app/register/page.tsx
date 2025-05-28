@@ -41,12 +41,15 @@ export default function RegisterScreen() {
     password,
     confirmPassword,
   }: SubscriptionSchema) {
-    // const data = await Register({ email, password, confirmPassword })
     handleRegister(email, password, confirmPassword)
   }
 
   const handleLoginScreen = () => {
-    router.push('/login') // navega para a rota /booking
+    router.push('/login')
+  }
+
+  const handlePasswordRecoverScreen = () => {
+    router.push('/passwordRecover')
   }
 
   return (
@@ -159,7 +162,7 @@ export default function RegisterScreen() {
         </div>
 
         <div className="flex flex-col w-full md:w-1/2 gap-2 items-center">
-          <p>Enter with your google account</p>
+          {/* <p>Enter with your google account</p>
 
           <img
             onClick={() => alert('This feature will be available soon')}
@@ -167,14 +170,22 @@ export default function RegisterScreen() {
             alt="Google"
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
             className="size-7 cursor-pointer"
-          />
+          /> */}
 
           <button
             type="button"
             onClick={handleLoginScreen}
             className="hover:underline text-center cursor-pointer"
           >
-            Or click here to create your account
+            Click here to log in
+          </button>
+
+          <button
+            type="button"
+            onClick={handlePasswordRecoverScreen}
+            className="hover:underline text-center cursor-pointer"
+          >
+            Forgot my password
           </button>
         </div>
 

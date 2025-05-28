@@ -1,4 +1,5 @@
 import './globals.css'
+import { LoaderSpinner } from '@/components/ui/loader'
 import AppProvider from '@/hooks'
 
 import type { Metadata } from 'next'

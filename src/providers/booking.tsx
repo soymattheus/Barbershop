@@ -1,5 +1,6 @@
 'use client'
 
+import type { Barber } from '@/types/barber'
 import type { BookingData } from '@/types/booking'
 import type { ServiceGroup } from '@/types/service'
 import Cookies from 'js-cookie'
@@ -13,8 +14,12 @@ import React, {
 } from 'react'
 import { toast } from 'react-toastify'
 
+import { useAuth } from '@/hooks/auth'
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+
 type BookingContextType = {
-  professionals: { value: string; label: string }[]
+  professionals: Barber[]
   services: ServiceGroup[]
   time: { value: string; label: string }[]
   selectedDate: string | null
@@ -31,14 +36,14 @@ type BookingContextType = {
   handleCloseModal: () => void
   bookingData: BookingData[]
   handleFetchBookingData: () => Promise<void>
+  handleFetchBarbers: () => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
 
 export const BookingProvider = ({ children }: { children: ReactNode }) => {
-  const [professionals, setProfessionals] = useState<
-    { value: string; label: string }[]
-  >([])
+  const { setIsloading } = useAuth()
+  const [professionals, setProfessionals] = useState<Barber[]>([])
   const [services, setServices] = useState<ServiceGroup[]>([])
   const [time, setTime] = useState<{ value: string; label: string }[]>([])
   const [selectedDate, setSelectedDate] = React.useState<string | null>(
@@ -56,19 +61,42 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     handleFetchServices()
   }, [])
 
-  const handleFetchBarbers = async () => {
+  const handleFetchBarbers = useCallback(async () => {
     try {
-      const data = [
-        { value: 'José Hernandez', label: 'José Hernandez' },
-        { value: 'Don Corte', label: 'Don Corte' },
-        { value: 'El Caballero', label: 'El Caballero' },
-        { value: 'El Artista', label: 'El Artista' },
-      ]
-      setProfessionals(data)
+      const response = await fetch(`${apiUrl}/barber/query`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      })
+
+      if (response.status !== 200) {
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
+          }
+        }
+      }
+
+      if (response.status === 200) {
+        const barbers = await response.json()
+        setProfessionals(barbers.barbers)
+      }
     } catch (error) {
       console.error('Error fetching professionals:', error)
     }
-  }
+  }, [])
 
   const handleFetchAvaliableTimes = async () => {
     try {
@@ -100,180 +128,13 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 
   const handleFetchServices = async () => {
     try {
-      const services: ServiceGroup[] = [
-        {
-          title: 'Haircuts',
-          services: [
-            {
-              name: 'Classic Haircut',
-              description: 'A traditional cut using clippers or scissors.',
-              price: 25,
-            },
-            {
-              name: 'Skin Fade / Bald Fade',
-              description:
-                'A sharp fade that goes all the way down to the skin.',
-              price: 30,
-            },
-            {
-              name: 'Taper Fade',
-              description:
-                'A clean and subtle fade around the neckline and sideburns.',
-              price: 28,
-            },
-            {
-              name: 'Scissor Cut',
-              description:
-                'A full haircut using only scissors for a more natural finish.',
-              price: 32,
-            },
-            {
-              name: 'Kids’ Haircut',
-              description:
-                'Fresh cuts for the little ones, styled to perfection.',
-              price: 20,
-            },
-            {
-              name: 'Hair Designs / Razor Art',
-              description:
-                'Custom lines and designs shaved in for a bold look.',
-              price: 35,
-            },
-          ],
-        },
-        {
-          title: 'Beard Services',
-          services: [
-            {
-              name: 'Beard Trim',
-              description: 'Clean up and shape your beard for a sharp finish.',
-              price: 15,
-            },
-            {
-              name: 'Hot Towel Shave',
-              description:
-                'Traditional straight-razor shave with a relaxing hot towel.',
-              price: 22,
-            },
-            {
-              name: 'Razor Line-Up / Shape-Up',
-              description: 'Razor-sharp edges around the beard and hairline.',
-              price: 18,
-            },
-            {
-              name: 'Beard Color',
-              description:
-                'Cover greys or switch up your beard tone with a custom dye.',
-              price: 20,
-            },
-          ],
-        },
-        {
-          title: 'Premium Add-Ons',
-          services: [
-            {
-              name: 'Eyebrow Shaping',
-              description: 'Crisp, clean brows using razor or threading.',
-              price: 10,
-            },
-            {
-              name: 'Hair Styling',
-              description:
-                'Styled with pomade, gel, or spray—your look, your way.',
-              price: 12,
-            },
-            {
-              name: 'Shampoo & Wash',
-              description:
-                'Hair wash with scalp massage and professional products.',
-              price: 8,
-            },
-            {
-              name: 'Facial / Black Mask',
-              description: 'Deep cleansing facial with detoxifying mask.',
-              price: 15,
-            },
-            {
-              name: 'Steam Treatment',
-              description: 'Opens up pores before a shave for smoother skin.',
-              price: 10,
-            },
-            {
-              name: 'Scalp Massage',
-              description:
-                'Relaxing massage to boost circulation and chill you out.',
-              price: 12,
-            },
-            {
-              name: 'Nose / Ear Waxing',
-              description:
-                'Quick waxing for unwanted hair, clean and painless.',
-              price: 10,
-            },
-          ],
-        },
-        {
-          title: 'Latin-Style Services',
-          services: [
-            {
-              name: 'Puerto Rican or Dominican Style Cuts',
-              description:
-                'Sharp fades, precise lines, and that clean Latino finish.',
-              price: 30,
-            },
-            {
-              name: 'Cut & Blow Dry Combo',
-              description: 'Perfect cut followed by a pro blowout.',
-              price: 35,
-            },
-            {
-              name: 'The Full Service',
-              description:
-                'Haircut, beard, eyebrows, facial — the full experience.',
-              price: 60,
-            },
-          ],
-        },
-        {
-          title: 'Grooming & Self-Care',
-          services: [
-            {
-              name: 'Facial Scrub',
-              description:
-                'Deep exfoliation to cleanse pores and refresh your skin.',
-              price: 15,
-            },
-            {
-              name: 'Hydrating Facial',
-              description: 'Restores moisture and glow to dry or tired skin.',
-              price: 20,
-            },
-            {
-              name: 'Scalp Detox Treatment',
-              description: 'Removes buildup and promotes healthy hair growth.',
-              price: 18,
-            },
-            {
-              name: 'Color Touch-Up',
-              description: 'Blends in grays or refreshes faded hair color.',
-              price: 25,
-            },
-            {
-              name: 'Hair Relaxer / Texturizer',
-              description: 'Chemical treatment to soften curls or waves.',
-              price: 30,
-            },
-            {
-              name: 'After-Cut Cologne Spray',
-              description: 'Signature fragrance to finish your session right.',
-              price: 5,
-            },
-          ],
-        },
-      ]
-      setServices(services)
+      const services: { services: ServiceGroup[] } = await fetch(
+        `${apiUrl}/service/query`
+      ).then(response => response.json())
+
+      setServices(services.services)
     } catch (error) {
-      console.error('Error fetching time:', error)
+      console.error('Error fetching services:', error)
     }
   }
 
@@ -291,39 +152,64 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleBookAppointment = async () => {
-    const user = Cookies.get('user')
-    if (!user) {
+    setIsloading(true)
+    const userCookies = Cookies.get('user')
+    if (!userCookies) {
       toast.error('Please log in to book an appointment.')
       return
     }
-    const userJson = JSON.parse(user)
-    const userId = userJson?.id
+
+    const userLoggedJson = JSON.parse(userCookies)
+    const userId = userLoggedJson?.id
 
     const date = selectedDate ? new Date(selectedDate) : new Date()
     date.setDate(date.getDate() + 1)
 
-    const bookingData: BookingData = {
-      id: `appt_${Date.now()}`,
-      userId: userId,
-      barber: selectedBarber,
+    const bookingData = {
       date: date.toISOString().split('T')[0],
       time: selectedTime,
-      service: selectedService,
-      status: 'pending',
+      serviceId: selectedService,
+      barberId: selectedBarber,
+      paymentType: 'pix',
+      nrPrice: 50.2,
     }
 
     try {
-      const previousBookingData = localStorage.getItem('bookingData')
-      if (previousBookingData) {
-        const parsedBookingData = JSON.parse(previousBookingData)
-        const updatedBookingData = [...parsedBookingData, bookingData]
-        localStorage.setItem('bookingData', JSON.stringify(updatedBookingData))
-      } else {
-        localStorage.setItem('bookingData', JSON.stringify([bookingData]))
+      const response = await fetch(`${apiUrl}/booking/insert/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify(bookingData),
+      })
+      if (response.status !== 201) {
+        setIsloading(false)
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
+          }
+        }
       }
 
-      toast.success('Booking successful!')
+      if (response.status === 200) {
+        handleOpenModal()
+        toast.success('Booking successful!')
+        setIsloading(false)
+      }
     } catch (error) {
+      setIsloading(false)
       toast.error('Error saving booking data. Please try again.')
     }
   }
@@ -338,17 +224,39 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       return
     }
 
-    const bookingDataString = localStorage.getItem('bookingData')
-    if (bookingDataString) {
-      const parsedBookingData: BookingData[] = JSON.parse(bookingDataString)
-
-      const userBookings = parsedBookingData.filter(
-        booking => booking.userId === userId
-      )
-      setBookingData(userBookings)
-    } else {
-      setBookingData([])
+    const response = await fetch(`${apiUrl}/booking/query/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    })
+    if (response.status !== 200) {
+      // Handle error response
+      if (response.status === 401) {
+        toast.error('Unauthorized, please login again')
+        return
+      }
+      if (response.status === 500) {
+        toast.error('Server error, please try again later')
+        return
+      }
+      if (response.status === 400) {
+        const responseData = await response.json()
+        if (responseData?.message) {
+          toast.error(responseData.message)
+          return
+        }
+      }
     }
+
+    if (response.status === 200) {
+      const bookings = await response.json()
+      setBookingData(bookings?.bookings)
+      return
+    }
+
+    setBookingData([])
   }, [])
 
   return (
@@ -371,6 +279,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         handleCloseModal,
         bookingData,
         handleFetchBookingData,
+        handleFetchBarbers,
       }}
     >
       {children}

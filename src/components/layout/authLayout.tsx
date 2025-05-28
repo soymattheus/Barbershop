@@ -16,6 +16,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { Button } from '../ui/button'
 import { IconButton } from '../ui/iconButton'
+import { LoaderSpinner } from '../ui/loader'
 
 interface DrawerProps {
   children?: React.ReactNode
@@ -24,7 +25,7 @@ interface DrawerProps {
 export default function AuthLayout({ children }: DrawerProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, handleLogout } = useAuth()
+  const { user, handleLogout, isLoading } = useAuth()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
 
   // Impede scroll do background quando sidebar estiver aberto
@@ -67,6 +68,7 @@ export default function AuthLayout({ children }: DrawerProps) {
 
   return (
     <div className="flex flex-col w-full min-h-screen">
+      <LoaderSpinner isLoading={isLoading} />
       <div className="flex flex-1 flex-row">
         {/* Drawer */}
         <aside

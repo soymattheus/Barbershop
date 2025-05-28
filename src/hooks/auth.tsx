@@ -9,10 +9,11 @@ import React, {
   useEffect,
   type ReactNode,
 } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
 import type { User, UserData } from '@/types/user'
 import { toast } from 'react-toastify'
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
 type AuthContextType = {
   user: User | null
@@ -26,6 +27,9 @@ type AuthContextType = {
   ) => Promise<void>
   handleFetchLocaleUserData: () => Promise<void>
   handleSetLoyaltyPackage: (loyaltyPack: string) => Promise<void>
+  isLoading: boolean
+  setIsloading: (state: boolean) => void
+  handlePasswordRecover: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -33,6 +37,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsloading] = useState<boolean>(false)
 
   useEffect(() => {
     const token = Cookies.get('token')
@@ -72,33 +77,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
       }
 
-      const users: User[] = localStorage.getItem('users')
-        ? JSON.parse(localStorage.getItem('users') || '')
-        : []
-
-      const userExists = users.find(
-        (user: User) =>
-          user?.user?.email?.toLocaleLowerCase() === email?.toLocaleLowerCase()
-      )
-      if (userExists) {
-        if (password === userExists?.user?.password) {
-          data.user = userExists.user
-          data.token = userExists.token
-          Cookies.set('token', userExists.token || '', {
-            path: '/',
-            expires: 1,
-          })
-          Cookies.set('user', JSON.stringify(userExists.user), {
-            path: '/',
-            expires: 1,
-          })
-          setUser({ token: userExists.token, user: userExists.user })
-          router.push('/portal')
-        } else {
-          toast.error('Invalid password')
+      const response = await fetch(`${apiUrl}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      if (response.status !== 200) {
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Incorrect password')
+          return
         }
-      } else {
-        toast.error('User not found')
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 404) {
+          toast.error('User not found')
+          return
+        }
+      }
+
+      if (response.status === 200) {
+        const responseData = await response.json()
+        data.user = responseData.user
+        data.token = responseData.token
+        console.log('User data:', data)
+
+        Cookies.set('token', responseData.token || '', {
+          path: '/',
+          expires: 1,
+        })
+        Cookies.set('user', JSON.stringify(responseData.user), {
+          path: '/',
+          expires: 1,
+        })
+        setUser({ token: responseData.token, user: responseData.user })
+        router.push('/portal')
       }
     } catch (error) {
       console.error('Login failed:', error)
@@ -118,38 +135,88 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     confirmPassword: string
   ) => {
     try {
-      const users: User[] = localStorage.getItem('users')
-        ? JSON.parse(localStorage.getItem('users') || '')
-        : []
-      const userExists = users.find((user: User) => user?.user?.email === email)
-      if (userExists) {
-        toast.error('User already exists')
-        return
-      }
       if (password !== confirmPassword) {
         toast.error('Passwords do not match')
         return
       }
-      const newUser: User = {
-        token: `Token-${Math.random().toString(36).substring(2, 15)}`,
-        user: {
-          id: uuidv4(),
-          name: '',
-          email: email,
-          password: password,
-          birthDate: '',
-          phone: '',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          loyaltyPackage: '',
-          avaliableServicesNumber: 0,
+
+      const response = await fetch(`${apiUrl}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ email, password }),
+      })
+      if (response.status !== 201) {
+        // Handle error response
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+          } else {
+            toast.error('Bad request')
+          }
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 409) {
+          toast.error('User already exists')
+          return
+        }
       }
-      users.push(newUser)
-      localStorage.setItem('users', JSON.stringify(users))
-      toast.success('User registered successfully')
-      router.push('/login')
+      if (response.status === 201) {
+        toast.success(
+          'User registered successfully. Activate your account via email'
+        )
+        // router.push('/login')
+      }
     } catch (error) {
+      console.error('Registration failed:', error)
+      toast.error('Registration failed')
+    }
+  }
+
+  const handlePasswordRecover = async (email: string) => {
+    try {
+      setIsloading(true)
+      const response = await fetch(`${apiUrl}/auth/request-password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+      if (response.status !== 201) {
+        setIsloading(false)
+        // Handle error response
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+          } else {
+            toast.error('Bad request')
+          }
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 409) {
+          toast.error('User already exists')
+          return
+        }
+      }
+      if (response.status === 200) {
+        setIsloading(false)
+        toast.success('A recovery email has been sent to you.')
+        // router.push('/login')
+      }
+    } catch (error) {
+      setIsloading(false)
       console.error('Registration failed:', error)
       toast.error('Registration failed')
     }
@@ -157,33 +224,57 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleSetLoyaltyPackage = async (loyaltyPack: string) => {
     try {
-      const userString = Cookies.get('user')
-      const userData: UserData = userString ? JSON.parse(userString) : null
-      if (userData) {
-        const users: User[] = localStorage.getItem('users')
-          ? JSON.parse(localStorage.getItem('users') || '')
-          : []
-        const userToUpdate = users.find(
-          (user: User) => user?.user?.id === userData?.id
-        )
+      const userCookies = Cookies.get('user')
+      const userObject = userCookies ? JSON.parse(userCookies) : null
+      const userId = userObject.id
 
-        if (userToUpdate) {
-          if (userToUpdate?.user) {
-            userToUpdate.user.loyaltyPackage = loyaltyPack
-            Cookies.set('user', JSON.stringify(userToUpdate.user), {
-              path: '/',
-              expires: 1,
-            })
-
-            //Update the user in localStorage
-            const updatedUsers = users.map((user: User) =>
-              user?.user?.id === userToUpdate?.user?.id ? userToUpdate : user
-            )
-            localStorage.setItem('users', JSON.stringify(updatedUsers))
-            setUser({ ...user, user: userToUpdate.user })
-            toast.success('Loyalty package updated successfully')
+      const response = await fetch(`${apiUrl}/user/update/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify({
+          ...user?.user,
+          loyaltyPackage: loyaltyPack,
+          avaliableServicesNumber: 0, // Reset available services number
+        }),
+      })
+      if (response.status !== 200) {
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          handleLogout()
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
           }
         }
+      }
+      if (response.status === 200) {
+        const responseData = await response.json()
+        Cookies.set(
+          'user',
+          JSON.stringify({
+            ...user?.user,
+            loyaltyPackage: loyaltyPack,
+            avaliableServicesNumber: 0,
+          }),
+          {
+            path: '/',
+            expires: 1,
+          }
+        )
+        toast.success('Loyalty package updated successfully')
+        return responseData
       }
     } catch (error) {
       console.error('Failed to set loyalty package:', error)
@@ -200,6 +291,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleRegister,
         handleFetchLocaleUserData,
         handleSetLoyaltyPackage,
+        isLoading,
+        setIsloading,
+        handlePasswordRecover,
       }}
     >
       {children}
