@@ -34,23 +34,24 @@ export default function GroupSelect({
           -- Select a {description.toLowerCase()} --
         </option>
 
-        {services.map(category => (
-          <optgroup
-            key={category.title}
-            label={category.title}
-            className="text-gray-500"
-          >
-            {category.services.map(service => (
-              <option
-                key={service.name}
-                value={`${service.name} - $${service.price}`}
-                className="text-gray-700"
-              >
-                {service.name} - ${service.price}
-              </option>
-            ))}
-          </optgroup>
-        ))}
+        {services.length > 0 &&
+          services?.map(category => (
+            <optgroup
+              key={category?.title}
+              label={category?.title}
+              className="text-gray-500"
+            >
+              {category?.services.map(service => (
+                <option
+                  key={service.name}
+                  value={`${service.id}`}
+                  className="text-gray-700"
+                >
+                  {service.name} - ${service.price}
+                </option>
+              ))}
+            </optgroup>
+          ))}
       </select>
     </div>
   )

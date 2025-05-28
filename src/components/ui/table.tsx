@@ -31,6 +31,7 @@ export default function Table({ bookingData }: TableProps) {
                   <th className="text-left px-4 py-2">Date</th>
                   <th className="text-left px-4 py-2">Time</th>
                   <th className="text-left px-4 py-2">Service</th>
+                  <th className="text-left px-4 py-2">Price</th>
                   <th className="text-left px-4 py-2">Barber</th>
                   <th className="text-left px-4 py-2">Status</th>
                   <th className="text-left px-4 py-2">Action</th>
@@ -39,7 +40,7 @@ export default function Table({ bookingData }: TableProps) {
               <tbody>
                 {currentAppointments.map(appointment => (
                   <tr
-                    key={appointment.id}
+                    key={appointment.id_booking}
                     className="border-b hover:bg-gray-100"
                   >
                     <td className="px-4 py-2 text-text">
@@ -61,7 +62,10 @@ export default function Table({ bookingData }: TableProps) {
                       {appointment?.service || ''}
                     </td>
                     <td className="px-4 py-2 text-text">
-                      {appointment?.barber || ''}
+                      {appointment?.price || ''}
+                    </td>
+                    <td className="px-4 py-2 text-text">
+                      {appointment?.barber_name || ''}
                     </td>
                     <td className="px-4 py-2 text-text">
                       {appointment?.status || ''}

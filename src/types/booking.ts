@@ -1,9 +1,10 @@
 export interface BookingData {
-  id: string
+  id_booking: string
   userId: string
-  barber: string
+  barber_name: string
   date: string | null
   time: string
   service: string
+  price: string
   status: string
 }
