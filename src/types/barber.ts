@@ -1,5 +1,5 @@
 export interface Barber {
-  idBarber: string
+  barberId: string
   name: string
   specialty: string
   status: string // Ou pode ser um enum, se tiver valores fixos como 'A'

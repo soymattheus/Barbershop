@@ -168,7 +168,7 @@ export default function Profile() {
                   type="text"
                   id="name"
                   {...register('name')}
-                  value={name}
+                  value={name || ''}
                   onChange={e => {
                     const val = e.target.value
                     setName(val)
@@ -197,7 +197,7 @@ export default function Profile() {
                 <input
                   type="date"
                   id="birthDate"
-                  value={birthDate || ''}
+                  value={birthDate || new Date()?.toISOString()?.split('T')[0]}
                   onChange={e => {
                     setBirthDate(e?.target?.value)
                     setValue('birthDate', new Date(e?.target?.value), {
@@ -235,7 +235,7 @@ export default function Profile() {
                   id="phone"
                   placeholder="Type your phone"
                   {...register('phone')}
-                  value={phone}
+                  value={phone || ''}
                   onChange={e => {
                     const masked = e.target.value.replace(
                       /^(\d{2})(\d{5})(\d{4})$/,
@@ -268,7 +268,7 @@ export default function Profile() {
                   id="email"
                   placeholder="Type your e-mail"
                   {...register('email')}
-                  value={email}
+                  value={email || ''}
                   onChange={e => {
                     const val = e.target.value
                     setEmail(val)

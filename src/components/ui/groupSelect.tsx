@@ -44,7 +44,7 @@ export default function GroupSelect({
               {category?.services.map(service => (
                 <option
                   key={service.name}
-                  value={`${service.id}`}
+                  value={`${service.serviceId}`}
                   className="text-gray-700"
                 >
                   {service.name} - ${service.price}

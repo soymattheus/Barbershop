@@ -9,6 +9,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { LoaderSpinner } from '@/components/ui/loader'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 
@@ -22,7 +23,7 @@ const subscriptionSchema = z.object({
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export default function LoginScreen() {
-  const { handleLogin } = useAuth()
+  const { handleLogin, isLoading } = useAuth()
   const router = useRouter()
   const [showPassword, setShowPassword] = React.useState(false)
   const {
@@ -41,123 +42,126 @@ export default function LoginScreen() {
     router.push('/register')
   }
 
-  const handlePasswordRecoverScreen = () => {
-    router.push('/passwordRecover')
+  const handlePasswordResetScreen = () => {
+    router.push('/requestPasswordReset')
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onLogin)}
-      className="flex w-full mx-auto items-center justify-center min-h-dvh md:gap-16 bg-primary md:bg-blue"
-    >
-      <Toast />
-      <div className="flex flex-col w-full md:w-2/4 p-8 gap-4 md:my-3 bg-primary md:rounded-2xl items-center justify-center">
-        <h1 className="text-white text-center font-bold leading-none font-heading text-4xl">
-          The Barrio Barbers
-        </h1>
+    <>
+      <LoaderSpinner isLoading={isLoading} />
+      <form
+        onSubmit={handleSubmit(onLogin)}
+        className="flex w-full mx-auto items-center justify-center min-h-dvh md:gap-16 bg-primary md:bg-blue"
+      >
+        <Toast />
+        <div className="flex flex-col w-full md:w-2/4 p-8 gap-4 md:my-3 bg-primary md:rounded-2xl items-center justify-center">
+          <h1 className="text-white text-center font-bold leading-none font-heading text-4xl">
+            The Barrio Barbers
+          </h1>
 
-        <h1 className="text-white text-center font-bold leading-none font-heading text-3xl">
-          Login
-        </h1>
+          <h1 className="text-white text-center font-bold leading-none font-heading text-3xl">
+            Login
+          </h1>
 
-        {/* E-mail */}
-        <div className="space-y-2 w-full md:w-8/12">
-          <p>E-mail</p>
-          <InputRoot error={!!errors?.email}>
-            <InputIcon>
-              <Mail className="size-6" />
-            </InputIcon>
-            <InputField
-              type="text"
-              placeholder="E-mail"
-              {...register('email')}
-            />
-          </InputRoot>
+          {/* E-mail */}
+          <div className="space-y-2 w-full md:w-8/12">
+            <p>E-mail</p>
+            <InputRoot error={!!errors?.email}>
+              <InputIcon>
+                <Mail className="size-6" />
+              </InputIcon>
+              <InputField
+                type="text"
+                placeholder="E-mail"
+                {...register('email')}
+              />
+            </InputRoot>
 
-          {errors?.email && (
-            <p className="text-danger font-semibold text-xs">
-              {errors.email.message}
+            {errors?.email && (
+              <p className="text-danger font-semibold text-xs">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div className="space-y-2 w-full md:w-8/12">
+            <p>Password</p>
+            <InputRoot error={!!errors?.password}>
+              <InputIcon>
+                <Lock className="size-6" />
+              </InputIcon>
+              <InputField
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                {...register('password')}
+              />
+              <InputIcon>
+                {showPassword ? (
+                  <Eye
+                    className="size-6"
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                ) : (
+                  <EyeClosed
+                    className="size-6"
+                    onClick={() => setShowPassword(!showPassword)}
+                  />
+                )}
+              </InputIcon>
+            </InputRoot>
+
+            {errors?.password && (
+              <p className="text-danger font-semibold text-xs">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          {/* Button */}
+          <div className="flex flex-col w-full gap-2 items-center">
+            <Button type="submit">Login</Button>
+          </div>
+
+          <div className="flex flex-col w-full md:w-1/2 gap-2 items-center">
+            {/* <p>Enter with your google account</p>
+
+            <img
+              onClick={() => alert('This feature will be available soon')}
+              onKeyDown={() => alert('This feature will be available soon')}
+              alt="Google"
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
+              className="size-7 cursor-pointer"
+            /> */}
+
+            <button
+              type="button"
+              onClick={handleresgisterScreen}
+              className="hover:underline text-center cursor-pointer"
+            >
+              Click here to create a new account
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePasswordResetScreen}
+              className="hover:underline text-center cursor-pointer"
+            >
+              Forgot my password
+            </button>
+          </div>
+
+          <hr className="w-full m-2 text-white" />
+
+          {/* Copyright */}
+          <div className="flex flex-col w-full gap-2 items-center">
+            <p className="text-xs">
+              {' '}
+              2025, All rights reserved - Matheus Tavares
             </p>
-          )}
+          </div>
         </div>
-
-        {/* Password */}
-        <div className="space-y-2 w-full md:w-8/12">
-          <p>Password</p>
-          <InputRoot error={!!errors?.password}>
-            <InputIcon>
-              <Lock className="size-6" />
-            </InputIcon>
-            <InputField
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              {...register('password')}
-            />
-            <InputIcon>
-              {showPassword ? (
-                <Eye
-                  className="size-6"
-                  onClick={() => setShowPassword(!showPassword)}
-                />
-              ) : (
-                <EyeClosed
-                  className="size-6"
-                  onClick={() => setShowPassword(!showPassword)}
-                />
-              )}
-            </InputIcon>
-          </InputRoot>
-
-          {errors?.password && (
-            <p className="text-danger font-semibold text-xs">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        {/* Button */}
-        <div className="flex flex-col w-full gap-2 items-center">
-          <Button type="submit">Login</Button>
-        </div>
-
-        <div className="flex flex-col w-full md:w-1/2 gap-2 items-center">
-          {/* <p>Enter with your google account</p>
-
-          <img
-            onClick={() => alert('This feature will be available soon')}
-            onKeyDown={() => alert('This feature will be available soon')}
-            alt="Google"
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-            className="size-7 cursor-pointer"
-          /> */}
-
-          <button
-            type="button"
-            onClick={handleresgisterScreen}
-            className="hover:underline text-center cursor-pointer"
-          >
-            Click here to create a new account
-          </button>
-
-          <button
-            type="button"
-            onClick={handlePasswordRecoverScreen}
-            className="hover:underline text-center cursor-pointer"
-          >
-            Forgot my password
-          </button>
-        </div>
-
-        <hr className="w-full m-2 text-white" />
-
-        {/* Copyright */}
-        <div className="flex flex-col w-full gap-2 items-center">
-          <p className="text-xs">
-            {' '}
-            2025, All rights reserved - Matheus Tavares
-          </p>
-        </div>
-      </div>
-    </form>
+      </form>
+    </>
   )
 }

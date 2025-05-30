@@ -40,19 +40,18 @@ export default function Table({ bookingData }: TableProps) {
               <tbody>
                 {currentAppointments.map(appointment => (
                   <tr
-                    key={appointment.id_booking}
+                    key={appointment.bookingId}
                     className="border-b hover:bg-gray-100"
                   >
                     <td className="px-4 py-2 text-text">
                       {appointment?.date
-                        ? new Date(appointment?.date).toLocaleDateString(
-                            'en-US',
-                            {
-                              year: 'numeric',
-                              month: '2-digit',
-                              day: '2-digit',
-                            }
-                          )
+                        ? new Date(
+                            `${appointment?.date}T23:00:00Z`
+                          ).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })
                         : ''}
                     </td>
                     <td className="px-4 py-2 text-text">
@@ -62,10 +61,15 @@ export default function Table({ bookingData }: TableProps) {
                       {appointment?.service || ''}
                     </td>
                     <td className="px-4 py-2 text-text">
-                      {appointment?.price || ''}
+                      {appointment?.price
+                        ? Number(appointment.price).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                          })
+                        : ''}
                     </td>
                     <td className="px-4 py-2 text-text">
-                      {appointment?.barber_name || ''}
+                      {appointment?.barberName || ''}
                     </td>
                     <td className="px-4 py-2 text-text">
                       {appointment?.status || ''}
