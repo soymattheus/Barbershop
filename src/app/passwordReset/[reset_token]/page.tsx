@@ -5,6 +5,7 @@ import { InputField, InputIcon, InputRoot } from '@/components/ui/input'
 import Toast from '@/components/ui/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeClosed, Lock, Mail } from 'lucide-react'
+import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -15,7 +16,6 @@ import { useAuth } from '@/hooks/auth'
 
 const subscriptionSchema = z
   .object({
-    email: z.string().email('Enter a valid email'),
     password: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })
@@ -39,8 +39,9 @@ const subscriptionSchema = z
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export default function RegisterScreen() {
-  const router = useRouter()
-  const { handleRegister, isLoading } = useAuth()
+  const params = useParams()
+  const reset_token = params.reset_token as string
+  const { isLoading, handleResetPassword } = useAuth()
   const [showPassword, setShowPassword] = React.useState(false)
   const {
     register,
@@ -51,20 +52,8 @@ export default function RegisterScreen() {
     resolver: zodResolver(subscriptionSchema),
   })
 
-  async function onSubscribe({
-    email,
-    password,
-    confirmPassword,
-  }: SubscriptionSchema) {
-    handleRegister(email, password, confirmPassword, setValue)
-  }
-
-  const handleLoginScreen = () => {
-    router.push('/login')
-  }
-
-  const handlePasswordResetScreen = () => {
-    router.push('/requestPasswordReset')
+  async function onSubscribe({ password }: SubscriptionSchema) {
+    handleResetPassword(reset_token, password, setValue)
   }
 
   return (
@@ -81,29 +70,8 @@ export default function RegisterScreen() {
           </h1>
 
           <h1 className="text-white text-center font-bold leading-none font-heading text-3xl">
-            Register
+            Password Reset
           </h1>
-
-          {/* E-mail */}
-          <div className="space-y-2 w-full md:w-8/12">
-            <p>E-mail</p>
-            <InputRoot error={!!errors?.email}>
-              <InputIcon>
-                <Mail className="size-6" />
-              </InputIcon>
-              <InputField
-                type="text"
-                placeholder="E-mail"
-                {...register('email')}
-              />
-            </InputRoot>
-
-            {errors?.email && (
-              <p className="text-danger font-semibold text-xs">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
 
           {/* Password */}
           <div className="space-y-2 w-full md:w-8/12">
@@ -175,35 +143,7 @@ export default function RegisterScreen() {
 
           {/* Button */}
           <div className="flex flex-col w-full gap-2 items-center">
-            <Button type="submit">Register</Button>
-          </div>
-
-          <div className="flex flex-col w-full md:w-1/2 gap-2 items-center">
-            {/* <p>Enter with your google account</p>
-
-            <img
-              onClick={() => alert('This feature will be available soon')}
-              onKeyDown={() => alert('This feature will be available soon')}
-              alt="Google"
-              src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-              className="size-7 cursor-pointer"
-            /> */}
-
-            <button
-              type="button"
-              onClick={handleLoginScreen}
-              className="hover:underline text-center cursor-pointer"
-            >
-              Click here to log in
-            </button>
-
-            <button
-              type="button"
-              onClick={handlePasswordResetScreen}
-              className="hover:underline text-center cursor-pointer"
-            >
-              Forgot my password
-            </button>
+            <Button type="submit">Reset</Button>
           </div>
 
           <hr className="w-full m-2 text-white" />

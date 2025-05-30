@@ -73,11 +73,13 @@ export default function Booking() {
     setSelectedBarber,
     handleBookAppointment,
     modalIsOpen,
-    handleOpenModal,
     handleCloseModal,
     bookingData,
     handleFetchBookingData,
     handleFetchBarbers,
+    handleFetchServices,
+    handleFetchAvaliableTimes,
+    responseBookingData,
   } = useBooking()
   const {
     register,
@@ -117,7 +119,14 @@ export default function Booking() {
   useEffect(() => {
     handleFetchBookingData()
     handleFetchBarbers()
-  }, [handleFetchBookingData, handleFetchBarbers])
+    handleFetchServices()
+    handleFetchAvaliableTimes()
+  }, [
+    handleFetchBookingData,
+    handleFetchBarbers,
+    handleFetchServices,
+    handleFetchAvaliableTimes,
+  ])
 
   const handleBook = () => {
     handleBookAppointment()
@@ -251,7 +260,7 @@ export default function Booking() {
                 <Select
                   description="Professional"
                   data={professionals?.map(item => ({
-                    value: item?.idBarber,
+                    value: item?.barberId,
                     label: item?.name,
                   }))}
                   selected={selectedBarber}
@@ -302,19 +311,23 @@ export default function Booking() {
             </p>
             <p>
               <span className="font-semibold">Barber:</span>{' '}
-              <span className="italic">{selectedBarber}</span>
+              <span className="italic">
+                {responseBookingData?.barberName || ''}
+              </span>
             </p>
             <p>
               <span className="font-semibold">Date:</span>{' '}
-              <span className="italic">{selectedDate}</span>
+              <span className="italic">{responseBookingData?.date || ''}</span>
             </p>
             <p>
               <span className="font-semibold">Time:</span>{' '}
-              <span className="italic">{selectedTime}</span>
+              <span className="italic">{responseBookingData?.time || ''}</span>
             </p>
             <p>
               <span className="font-semibold">Service:</span>{' '}
-              <span className="italic">{selectedService}</span>
+              <span className="italic">
+                {responseBookingData?.service || ''}
+              </span>
             </p>
             <hr className="border-gray-300" />
             <p className="italic text-gray-500">

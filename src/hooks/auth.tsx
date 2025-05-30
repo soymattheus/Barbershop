@@ -10,7 +10,8 @@ import React, {
   type ReactNode,
 } from 'react'
 
-import type { User, UserData } from '@/types/user'
+import type { User } from '@/types/user'
+import type { UseFormSetValue } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
@@ -23,13 +24,26 @@ type AuthContextType = {
   handleRegister: (
     email: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
+    setValue: UseFormSetValue<{
+      password: string
+      email: string
+      confirmPassword: string
+    }>
   ) => Promise<void>
   handleFetchLocaleUserData: () => Promise<void>
   handleSetLoyaltyPackage: (loyaltyPack: string) => Promise<void>
   isLoading: boolean
   setIsloading: (state: boolean) => void
-  handlePasswordRecover: (email: string) => Promise<void>
+  handlePasswordReset: (email: string) => Promise<void>
+  handleResetPassword: (
+    token: string,
+    newPassword: string,
+    setValue: UseFormSetValue<{
+      password: string
+      confirmPassword: string
+    }>
+  ) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -64,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data: User = {
         token: '',
         user: {
-          id: '',
+          userId: '',
           name: '',
           email: '',
           password: '',
@@ -74,9 +88,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           updatedAt: '',
           loyaltyPackage: '',
           avaliableServicesNumber: 0,
+          status: '',
         },
       }
 
+      setIsloading(true)
       const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: {
@@ -85,6 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({ email, password }),
       })
       if (response.status !== 200) {
+        setIsloading(false)
         // Handle error response
         if (response.status === 401) {
           toast.error('Incorrect password')
@@ -101,6 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (response.status === 200) {
+        setIsloading(false)
         const responseData = await response.json()
         data.user = responseData.user
         data.token = responseData.token
@@ -118,6 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         router.push('/portal')
       }
     } catch (error) {
+      setIsloading(false)
       console.error('Login failed:', error)
     }
   }
@@ -132,7 +151,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleRegister = async (
     email: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
+    setValue: UseFormSetValue<{
+      password: string
+      email: string
+      confirmPassword: string
+    }>
   ) => {
     try {
       if (password !== confirmPassword) {
@@ -140,6 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return
       }
 
+      setIsloading(true)
       const response = await fetch(`${apiUrl}/auth/register`, {
         method: 'POST',
         headers: {
@@ -148,6 +173,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         body: JSON.stringify({ email, password }),
       })
       if (response.status !== 201) {
+        setIsloading(false)
         // Handle error response
         if (response.status === 400) {
           const responseData = await response.json()
@@ -168,18 +194,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }
       if (response.status === 201) {
+        setIsloading(false)
         toast.success(
           'User registered successfully. Activate your account via email'
         )
-        // router.push('/login')
+        setValue('email', '')
+        setValue('password', '')
+        setValue('confirmPassword', '')
       }
     } catch (error) {
+      setIsloading(false)
       console.error('Registration failed:', error)
       toast.error('Registration failed')
     }
   }
 
-  const handlePasswordRecover = async (email: string) => {
+  const handlePasswordReset = async (email: string) => {
     try {
       setIsloading(true)
       const response = await fetch(`${apiUrl}/auth/request-password-reset`, {
@@ -281,6 +311,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const handleResetPassword = async (
+    token: string,
+    newPassword: string,
+    setValue: UseFormSetValue<{
+      password: string
+      confirmPassword: string
+    }>
+  ) => {
+    try {
+      setIsloading(true)
+      const response = await fetch(`${apiUrl}/auth/reset-password/${token}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newPassword }),
+      })
+      if (response.status !== 200) {
+        setIsloading(false)
+        // Handle error response
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+          } else {
+            toast.error('Bad request')
+          }
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+      }
+      if (response.status === 200) {
+        setValue('password', '')
+        setValue('confirmPassword', '')
+        setIsloading(false)
+        toast.success('Password reset successfully')
+      }
+    } catch (error) {
+      setIsloading(false)
+      console.error('Password reset failed:', error)
+      toast.error('Password reset failed')
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -293,7 +370,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         handleSetLoyaltyPackage,
         isLoading,
         setIsloading,
-        handlePasswordRecover,
+        handlePasswordReset,
+        handleResetPassword,
       }}
     >
       {children}

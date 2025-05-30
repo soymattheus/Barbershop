@@ -1,7 +1,7 @@
 'use client'
 
 import type { Barber } from '@/types/barber'
-import type { BookingData } from '@/types/booking'
+import type { BookingData, ResponseBookingData } from '@/types/booking'
 import type { ServiceGroup } from '@/types/service'
 import Cookies from 'js-cookie'
 import React, {
@@ -30,13 +30,20 @@ type BookingContextType = {
   setSelectedTime: React.Dispatch<React.SetStateAction<string>>
   selectedBarber: string
   setSelectedBarber: React.Dispatch<React.SetStateAction<string>>
+  paymentType: string
+  setPaymentType: React.Dispatch<React.SetStateAction<string>>
+  nrPrice: number
+  setNrPrice: React.Dispatch<React.SetStateAction<number>>
   handleBookAppointment: () => Promise<void>
   modalIsOpen: boolean
   handleOpenModal: () => void
   handleCloseModal: () => void
   bookingData: BookingData[]
   handleFetchBookingData: () => Promise<void>
+  responseBookingData: ResponseBookingData | undefined
   handleFetchBarbers: () => Promise<void>
+  handleFetchServices: () => Promise<void>
+  handleFetchAvaliableTimes: () => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -52,14 +59,13 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const [selectedService, setSelectedService] = React.useState<string>('')
   const [selectedTime, setSelectedTime] = React.useState<string>('')
   const [selectedBarber, setSelectedBarber] = React.useState<string>('')
+  const [paymentType, setPaymentType] = useState<string>('pix')
+  const [nrPrice, setNrPrice] = useState<number>(10)
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false)
   const [bookingData, setBookingData] = useState<BookingData[]>([])
-
-  useEffect(() => {
-    handleFetchBarbers()
-    handleFetchAvaliableTimes()
-    handleFetchServices()
-  }, [])
+  const [responseBookingData, setResponseBookingData] = useState<
+    ResponseBookingData | undefined
+  >()
 
   const handleFetchBarbers = useCallback(async () => {
     try {
@@ -98,7 +104,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
-  const handleFetchAvaliableTimes = async () => {
+  const handleFetchAvaliableTimes = useCallback(async () => {
     try {
       const time = [
         { label: '9:00 AM', value: '09:00' },
@@ -124,9 +130,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Error fetching time:', error)
     }
-  }
+  }, [])
 
-  const handleFetchServices = async () => {
+  const handleFetchServices = useCallback(async () => {
     try {
       const services: { services: ServiceGroup[] } = await fetch(
         `${apiUrl}/service/query`
@@ -136,7 +142,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Error fetching services:', error)
     }
-  }
+  }, [])
 
   const handleOpenModal = () => {
     setModalIsOpen(true)
@@ -149,6 +155,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     setSelectedService('')
     setSelectedTime('')
     setSelectedBarber('')
+    setResponseBookingData(undefined)
   }
 
   const handleBookAppointment = async () => {
@@ -163,15 +170,14 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     const userId = userLoggedJson?.id
 
     const date = selectedDate ? new Date(selectedDate) : new Date()
-    date.setDate(date.getDate() + 1)
 
     const bookingData = {
       date: date.toISOString().split('T')[0],
       time: selectedTime,
       serviceId: selectedService,
       barberId: selectedBarber,
-      paymentType: 'pix',
-      nrPrice: 50.2,
+      paymentType: paymentType,
+      nrPrice: nrPrice,
     }
 
     try {
@@ -204,6 +210,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (response.status === 200) {
+        setResponseBookingData(await response.json())
         handleOpenModal()
         toast.success('Booking successful!')
         setIsloading(false)
@@ -273,6 +280,10 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         setSelectedTime,
         selectedBarber,
         setSelectedBarber,
+        paymentType,
+        setPaymentType,
+        nrPrice,
+        setNrPrice,
         handleBookAppointment,
         modalIsOpen,
         handleOpenModal,
@@ -280,6 +291,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         bookingData,
         handleFetchBookingData,
         handleFetchBarbers,
+        handleFetchServices,
+        handleFetchAvaliableTimes,
+        responseBookingData,
       }}
     >
       {children}

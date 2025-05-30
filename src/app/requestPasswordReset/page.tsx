@@ -19,19 +19,21 @@ const subscriptionSchema = z.object({
 
 type SubscriptionSchema = z.infer<typeof subscriptionSchema>
 
-export default function LoginScreen() {
-  const { handlePasswordRecover, isLoading } = useAuth()
+export default function RequestPasswordReset() {
+  const { handlePasswordReset, isLoading } = useAuth()
   const router = useRouter()
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<SubscriptionSchema>({
     resolver: zodResolver(subscriptionSchema),
   })
 
   async function onRecoveryEmail({ email }: SubscriptionSchema) {
-    handlePasswordRecover(email)
+    handlePasswordReset(email)
+    setValue('email', '')
   }
 
   const handleLoginScreen = () => {

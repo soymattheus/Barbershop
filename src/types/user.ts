@@ -1,5 +1,5 @@
 export type UserData = {
-  id: string
+  userId: string
   name: string
   email: string
   password?: string
@@ -9,6 +9,7 @@ export type UserData = {
   updatedAt: string
   loyaltyPackage: string
   avaliableServicesNumber: number
+  status: string
 }
 
 export type User = {
