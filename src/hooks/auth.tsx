@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.toLowerCase(), password }),
       })
       if (response.status !== 200) {
         setIsloading(false)
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.toLocaleLowerCase(), password }),
       })
       if (response.status !== 201) {
         setIsloading(false)
@@ -217,7 +217,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.toLowerCase() }),
       })
       if (response.status !== 201) {
         setIsloading(false)
@@ -231,20 +231,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
           return
         }
+
         if (response.status === 500) {
           toast.error('Server error, please try again later')
           return
         }
+
         if (response.status === 409) {
           toast.error('User already exists')
           return
         }
       }
+
       if (response.status === 200) {
         setIsloading(false)
         toast.success('A recovery email has been sent to you.')
-        // router.push('/login')
+        setTimeout(() => {
+          router.push('/login')
+        }, 3000)
+        
+        return
       }
+
+      toast.error('Failed to send recovery email')
+      return
     } catch (error) {
       setIsloading(false)
       console.error('Registration failed:', error)
@@ -350,6 +360,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setValue('confirmPassword', '')
         setIsloading(false)
         toast.success('Password reset successfully')
+        setTimeout(() => {
+          router.push('/login')
+        }, 3000)
       }
     } catch (error) {
       setIsloading(false)
