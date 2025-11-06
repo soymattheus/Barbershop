@@ -2,8 +2,8 @@
 
 import AuthLayout from '@/components/layout/authLayout'
 import Banner from '@/components/layout/banner'
+import Table from '@/components/layout/table'
 import { Button } from '@/components/ui/button'
-import Table from '@/components/ui/table'
 import React, { useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'

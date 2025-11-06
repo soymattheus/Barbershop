@@ -44,6 +44,10 @@ type BookingContextType = {
   handleFetchBarbers: () => Promise<void>
   handleFetchServices: () => Promise<void>
   handleFetchAvaliableTimes: () => Promise<void>
+  handleUpdateBoogkindStatus: (
+    bookingId: string,
+    status: string
+  ) => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -266,6 +270,58 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     setBookingData([])
   }, [])
 
+  const handleUpdateBoogkindStatus = async (
+    bookingId: string,
+    status: string
+  ) => {
+    try {
+      const user = Cookies.get('user')
+      const userJson = user ? JSON.parse(user) : null
+      const userId = userJson ? userJson?.id : ''
+
+      if (!userId) {
+        toast.error('No user ID found in cookies.')
+        return
+      }
+
+      const response = await fetch(`${apiUrl}/booking/update/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify({ status, bookingId }),
+      })
+
+      if (response.status !== 200) {
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
+          }
+        }
+      }
+
+      if (response.status === 200) {
+        toast.success('Booking status updated successfully!')
+        handleFetchBookingData()
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error)
+      toast.error('Error updating booking status. Please try again.')
+    }
+  }
+
   return (
     <BookingContext.Provider
       value={{
@@ -294,6 +350,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         handleFetchServices,
         handleFetchAvaliableTimes,
         responseBookingData,
+        handleUpdateBoogkindStatus,
       }}
     >
       {children}
