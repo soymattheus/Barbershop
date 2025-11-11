@@ -2,15 +2,6 @@ import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import Footer from '@/components/layout/footer'
 import Services from '@/components/layout/services'
-import { CircleUserRound, UserCircle } from 'lucide-react'
-import {
-  FaInstagram,
-  FaLocationArrow,
-  FaTiktok,
-  FaWhatsapp,
-  FaYoutube,
-} from 'react-icons/fa'
-import { MdEmail } from 'react-icons/md'
 import HeaderBookButton from './headerBookButton'
 import HeaderLoginButton from './headerLoginButton'
 
