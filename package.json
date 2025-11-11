@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "rm -rf build && next build && mkdir build && cp -r .next build/",
     "start": "cp -r build/.next .next && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.1",
@@ -32,12 +34,23 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@chromatic-com/storybook": "^4.1.2",
+    "@storybook/addon-a11y": "^10.0.7",
+    "@storybook/addon-docs": "^10.0.7",
+    "@storybook/addon-onboarding": "^10.0.7",
+    "@storybook/addon-vitest": "^10.0.7",
+    "@storybook/nextjs-vite": "^10.0.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19",
     "@types/react-input-mask": "^3.0.6",
+    "@vitest/browser-playwright": "^4.0.8",
+    "@vitest/coverage-v8": "^4.0.8",
     "orval": "^7.5.0",
-    "typescript": "^5"
+    "playwright": "^1.56.1",
+    "storybook": "^10.0.7",
+    "typescript": "^5",
+    "vitest": "^4.0.8"
   }
 }
