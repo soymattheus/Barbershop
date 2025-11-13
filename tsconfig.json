@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/ui/input/input.stories.jsx", "src/components/ui/iconButton/IconButton.stories.jsx", "src/components/ui/groupSelect/GroupSelect.stories.jsx", "src/components/ui/button/Button.stories.jsx"],
   "exclude": ["node_modules"]
 }

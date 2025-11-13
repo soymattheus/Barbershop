@@ -1,9 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { Button } from '.'
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: 'Components/Button',
   component: Button,
   parameters: {
@@ -13,19 +12,19 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     className: { control: 'text' },
     disabled: { control: 'boolean' },
+    onClick: { action: 'clicked' },
   },
 }
 
 export default meta
-type Story = StoryObj<typeof Button>
 
-export const Primary: Story = {
+export const Primary = {
   args: {
     children: 'Click me',
   },
 }
 
-export const WithIcon: Story = {
+export const WithIcon = {
   render: args => (
     <Button {...args} className={args.className}>
       <span className="flex items-center gap-2">
@@ -39,23 +38,9 @@ export const WithIcon: Story = {
   },
 }
 
-export const Secondary: Story = {
-  args: {
-    children: 'Mais leve',
-    className: 'bg-transparent text-black border-gray',
-  },
-}
-
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     children: 'Disabled',
     disabled: true,
-  },
-}
-
-export const Playground: Story = {
-  args: {
-    children: 'Playground',
-    className: '',
   },
 }

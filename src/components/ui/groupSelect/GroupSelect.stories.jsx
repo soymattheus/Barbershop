@@ -1,18 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react'
 import React, { useState } from 'react'
 import GroupSelect from '.'
 
-import type { ServiceGroup } from '@/types/service'
-
-interface GroupSelectProps {
-  description: string
-  services: ServiceGroup[]
-  selected: string
-  setSelected: (value: string) => void
-  error?: boolean
-}
-
-const mockServices: ServiceGroup[] = [
+const mockServices = [
   {
     title: 'Hair',
     services: [
@@ -40,7 +29,7 @@ const mockServices: ServiceGroup[] = [
   },
 ]
 
-const meta: Meta<typeof GroupSelect> = {
+const meta = {
   title: 'Components/GroupSelect',
   component: GroupSelect,
   tags: ['autodocs'],
@@ -52,10 +41,8 @@ const meta: Meta<typeof GroupSelect> = {
 
 export default meta
 
-type Story = StoryObj<typeof GroupSelect>
-
 // Wrapper que gerencia o estado selecionado para permitir interação nas stories
-function InteractiveTemplate(args: GroupSelectProps) {
+function InteractiveTemplate(args) {
   const [selected, setSelected] = useState(args.selected ?? '')
   return (
     <div style={{ width: 360 }}>
@@ -70,7 +57,7 @@ function InteractiveTemplate(args: GroupSelectProps) {
   )
 }
 
-export const Default: Story = {
+export const Default = {
   render: args => <InteractiveTemplate {...args} />,
   args: {
     description: 'Service',
@@ -80,17 +67,17 @@ export const Default: Story = {
   },
 }
 
-export const WithError: Story = {
+export const WithError = {
   render: args => <InteractiveTemplate {...args} />,
   args: {
     description: 'Service',
     services: mockServices,
     selected: '',
-    error: true,
+    error: false,
   },
 }
 
-export const EmptyServices: Story = {
+export const EmptyServices = {
   render: args => <InteractiveTemplate {...args} />,
   args: {
     description: 'Service',
@@ -100,19 +87,12 @@ export const EmptyServices: Story = {
   },
 }
 
-export const Preselected: Story = {
+export const Preselected = {
   render: args => <InteractiveTemplate {...args} />,
   args: {
     description: 'Service',
     services: mockServices,
-    selected: '2',
+    selected: 'a1f5d8b2-1e0d-4e3c-b8d1-90f1b8a1c001',
     error: false,
   },
 }
-
-// Observações:
-// - As stories usam um template interativo (useState) porque o componente espera receber
-//   `selected` + `setSelected` do pai. Isso permite testar seleção diretamente no Storybook.
-// - Se você tiver as types reais em '@/types/service', substitua os tipos mock neste arquivo
-//   e importe as fixtures reais.
-// - Ajuste o estilo do container no template para refletir o layout do seu app (width, spacing, etc.).
