@@ -1,4 +1,6 @@
 import React from 'react'
+import { action } from 'storybook/actions';
+import { fn } from 'storybook/test';
 import Select from '.'
 
 const mockServices = [
@@ -18,7 +20,6 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     selected: { control: 'text' },
-    setSelected: { control: 'action' },
     description: { control: 'text' },
     error: { control: 'boolean' },
   },
@@ -29,6 +30,10 @@ export default meta
 // Wrapper que gerencia o estado selecionado para permitir interação nas stories
 const _Select = (args) => {
   const [selected, setSelected] = React.useState(args.selected ?? '')
+  const handleSelected = (e) => {
+    setSelected(e)
+    args.setSelected?.();
+  }
   return (
     <div style={{ width: 360 }}>
       <Select
@@ -36,7 +41,7 @@ const _Select = (args) => {
         description={args.description}
         data={args.services}
         selected={selected}
-        setSelected={setSelected}
+        setSelected={(e) => handleSelected(e)}
       />
       <div style={{ marginTop: 12, fontSize: 13 }}>Selected: {selected}</div>
     </div>

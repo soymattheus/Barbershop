@@ -48,3 +48,11 @@ export const Default = {
     isOpen: true
   },
 }
+
+export const Closed = {
+  render: Template,
+  args: {
+    title: 'Here you put the modal title',
+    isOpen: false
+  },
+}

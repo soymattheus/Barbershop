@@ -73,7 +73,7 @@ export const WithError = {
     description: 'Service',
     services: mockServices,
     selected: '',
-    error: false,
+    error: true,
   },
 }
 

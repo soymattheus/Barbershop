@@ -26,7 +26,9 @@ export default function GroupSelect({
       <select
         id="service"
         value={selected}
-        onChange={e => setSelected(e.target.value || '')}
+        onChange={e => {
+          setSelected(e.target.value)
+        }}
         data-error={error}
         className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
       >

@@ -19,3 +19,9 @@ export const Default = {
     isLoading: true
   },
 }
+
+export const NotRender = {
+  args: {
+    isLoading: false
+  },
+}
