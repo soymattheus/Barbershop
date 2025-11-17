@@ -1,6 +1,7 @@
 import type React from 'react'
 import type { JSX } from 'react'
 import { BookingProvider } from './booking'
+import { ChatProvider } from './chat'
 import { ProfileProvider } from './profile'
 
 function PagesProvider({
@@ -8,7 +9,9 @@ function PagesProvider({
 }: { children: React.ReactNode }): JSX.Element {
   return (
     <BookingProvider>
-      <ProfileProvider>{children}</ProfileProvider>
+      <ProfileProvider>
+        <ChatProvider>{children}</ChatProvider>
+      </ProfileProvider>
     </BookingProvider>
   )
 }

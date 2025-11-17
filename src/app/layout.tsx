@@ -1,3 +1,4 @@
+import Chat from '@/components/layout/Chat'
 import './globals.css'
 import { LoaderSpinner } from '@/components/ui/loader'
 import AppProvider from '@/hooks'
@@ -31,7 +32,10 @@ export default function RootLayout({
     <html lang="en" className={`${montserrat.variable} ${oxanium.variable}`}>
       <body className="min-w-[320px] bg-secondary text-gray-100">
         <main className="mx-auto flex">
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            {children}
+            <Chat />
+          </AppProvider>
         </main>
       </body>
     </html>

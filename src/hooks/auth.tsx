@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data: User = {
         token: '',
         user: {
-          userId: '',
+          id: '',
           name: '',
           email: '',
           password: '',
@@ -249,7 +249,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setTimeout(() => {
           router.push('/login')
         }, 3000)
-        
+
         return
       }
 

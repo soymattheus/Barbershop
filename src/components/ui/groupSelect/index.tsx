@@ -36,7 +36,7 @@ export default function GroupSelect({
           -- Select a {description.toLowerCase()} --
         </option>
 
-        {services.length > 0 &&
+        {services?.length > 0 &&
           services?.map(category => (
             <optgroup
               key={category?.title}
