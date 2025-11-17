@@ -40,9 +40,18 @@ export default function Chat() {
           </Button>
         </div>
       ) : (
-        <div className="fixed bottom-6 right-6 w-80 sm:w-96 bg-white shadow-xl rounded-lg border border-primary flex flex-col overflow-hidden z-50 h-8/12 max-h-8/12">
+        <div
+          className="
+          fixed bottom-0 right-0 inset-0      /* mobile: ocupa toda a tela */
+          sm:inset-auto sm:bottom-6 sm:right-6 /* desktop: volta a ser popup */
+          w-full h-full                        /* mobile full */
+          sm:w-80 sm:h-8/12 sm:max-h-8/12      /* desktop tamanho atual */
+          bg-white shadow-xl rounded-none md:rounded-lg 
+          border border-primary flex flex-col overflow-hidden z-50
+        "
+        >
           {/* Header */}
-          <div className="flex items-center justify-between bg-primary/90 p-3 rounded-t-lg">
+          <div className="flex items-center justify-between bg-primary/90 p-3">
             <h2 className="text-sm font-semibold text-white">
               {user?.user?.name?.split(' ')[0]} — Chat
             </h2>
