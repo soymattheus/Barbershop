@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useChat } from '@/providers/chat'
 import { Button } from '../ui/button'
 import { IconButton } from '../ui/iconButton'
+import { InputField, InputRoot } from '../ui/input'
 
 export default function Chat() {
   const bottomRef = useRef<HTMLDivElement | null>(null)
@@ -40,16 +41,7 @@ export default function Chat() {
           </Button>
         </div>
       ) : (
-        <div
-          className="
-          fixed bottom-0 right-0 inset-0      /* mobile: ocupa toda a tela */
-          sm:inset-auto sm:bottom-6 sm:right-6 /* desktop: volta a ser popup */
-          w-full h-full                        /* mobile full */
-          sm:w-80 sm:h-8/12 sm:max-h-8/12      /* desktop tamanho atual */
-          bg-white shadow-xl rounded-none md:rounded-lg 
-          border border-primary flex flex-col overflow-hidden z-50
-        "
-        >
+        <div className="fixed bottom-0 right-0 inset-0 sm:inset-auto sm:bottom-6 sm:right-6 w-full h-full sm:w-80 sm:h-8/12 sm:max-h-8/12 bg-white shadow-xl rounded-none md:rounded-lg border border-primary flex flex-col overflow-hidden z-50">
           {/* Header */}
           <div className="flex items-center justify-between bg-primary/90 p-3">
             <h2 className="text-sm font-semibold text-white">
@@ -95,19 +87,22 @@ export default function Chat() {
           </div>
 
           {/* Input */}
-          <div className="p-2 flex gap-2 border-t border-gray-200 bg-white">
-            <input
-              className="flex-1 border border-primary/60 text-gray-700 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              value={text}
-              onChange={e => setText(e.target.value)}
-              placeholder="Type here..."
-              onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  handleSend()
-                }
-              }}
-            />
+          <div className="p-2 flex gap-2 border-t border-gray-200 bg-white items-center">
+            <InputRoot>
+              <InputField
+                className="text-gray-900"
+                type="text"
+                placeholder="Type your message..."
+                value={text}
+                onChange={e => setText(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleSend()
+                  }
+                }}
+              />
+            </InputRoot>
 
             <Button className="text-sm px-3" type="button" onClick={handleSend}>
               Send
