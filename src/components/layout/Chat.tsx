@@ -26,6 +26,20 @@ export default function Chat() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isOpen])
 
+  useEffect(() => {
+    const isMobile = window.innerWidth < 640 // sm breakpoint do Tailwind
+
+    if (isMobile && isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
   return (
     <div
       className={`${user?.token ? 'fixed' : 'hidden'} bottom-6 right-6 w-3xs`}
