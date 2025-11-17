@@ -5,6 +5,7 @@
 <ul>
 <li>React</li>
 <li>Next</li>
+<li>Socket.IO</li>
 <li>Tailwind</li>
 <li>Postcss</li>
 <li>Tailwind Merge</li>
@@ -15,10 +16,7 @@
 
 <h3>Screen Images</h3>
 <p align="center">
-<img loading="lazy" src="./github/images/homePage.png"/>
-</p>
-<p align="center">
-<img loading="lazy" src="./github/images/invitePage.png"/>
+<img loading="lazy" src="./public/images/homePage.png"/>
 </p>
 
 <h3>To run the project locally follow these steps</h3>
