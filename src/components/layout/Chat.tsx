@@ -40,6 +40,10 @@ export default function Chat() {
     }
   }, [isOpen])
 
+  useEffect(() => {
+    setIsOpen(false)
+  }, [setIsOpen])
+
   return (
     <div
       className={`${user?.token ? 'fixed' : 'hidden'} bottom-6 right-6 w-3xs z-50`}

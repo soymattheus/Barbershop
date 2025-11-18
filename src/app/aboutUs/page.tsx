@@ -1,3 +1,4 @@
+import Chat from '@/components/layout/Chat'
 import AuthLayout from '@/components/layout/authLayout'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
@@ -33,6 +34,7 @@ export default function AboutUs() {
   return (
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
+        <Chat />
         <div className="flex flex-col items-center justify-center w-full px-6 gap-10">
           <h1 className="text-4xl font-bold mb-4 text-primary">About Us</h1>
           <p className="text-lg text-center max-w-2xl mb-10 text-gray-800 ">

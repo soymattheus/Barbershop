@@ -8,18 +8,21 @@ import Table from '@/components/layout/table'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
 import Select from '@/components/ui/select'
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react'
+import { type KeyboardEvent, type MouseEvent, useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import Chat from '@/components/layout/Chat'
 import GroupSelect from '@/components/ui/groupSelect'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 import { useBooking } from '@/providers/booking'
 import { useRouter } from 'next/navigation'
+import DatePicker from 'react-datepicker'
 
 const bookingSchema = z.object({
   name: z.string().min(1, {
@@ -136,6 +139,7 @@ export default function Booking() {
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         <Toast />
+        <Chat />
         <div className="flex flex-col px-6 md:px-12 py-10 gap-10">
           <Banner showNavigation page="Booking" />
 
@@ -161,6 +165,7 @@ export default function Booking() {
           >
             {/* Name and date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Name */}
               <div>
                 <label
                   htmlFor="name"
@@ -186,29 +191,88 @@ export default function Booking() {
                 )}
               </div>
 
+              {/* Professional */}
               <div>
+                <Select
+                  description="Professional"
+                  data={professionals?.map(item => ({
+                    value: item?.barberId,
+                    label: item?.name,
+                  }))}
+                  selected={selectedBarber}
+                  setSelected={setSelectedBarber}
+                  {...register('barber')}
+                  error={!!errors.barber}
+                />
+                {errors?.barber && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.barber.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Service, Time, Professional */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Date */}
+              <div className="flex flex-col">
                 <label
                   htmlFor="date"
                   className="block text-sm font-bold text-gray-700 mb-1"
                 >
                   Select a Date
                 </label>
-
-                <input
-                  type="date"
+                <DatePicker
                   id="date"
-                  value={selectedDate || ''}
-                  onChange={e => {
-                    setSelectedDate(e?.target?.value)
-                    setValue('date', new Date(e?.target?.value), {
-                      shouldValidate: true,
-                    })
+                  locale="enUS"
+                  minDate={new Date()}
+                  // disabled={!selectedBarber}
+                  // includeDates={[
+                  //   new Date('2025-12-25'), // Christmas Day
+                  //   new Date('2026-01-01'), // New Year's Day
+                  // ]}
+                  selected={new Date(selectedDate || new Date('2025-12-25'))}
+                  {...register('date')}
+                  onChange={date => {
+                    setSelectedDate(
+                      date?.toISOString().split('T')[0] ||
+                        new Date().toISOString().split('T')[0]
+                    )
+                    setValue(
+                      'date',
+                      new Date(
+                        date?.toISOString().split('T')[0] ||
+                          new Date().toISOString().split('T')[0]
+                      ),
+                      {
+                        shouldValidate: true,
+                      }
+                    )
                   }}
-                  placeholder="MM-DD-YYYY"
-                  min={new Date()?.toISOString()?.split('T')[0]}
-                  autoComplete="off"
-                  data-error={!!errors?.date}
-                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  onChangeRaw={(
+                    e?:
+                      | MouseEvent<HTMLElement>
+                      | KeyboardEvent<HTMLElement>
+                      | undefined
+                  ) => {
+                    const target = e?.target as HTMLInputElement | undefined
+                    if (!target?.value) {
+                      return
+                    }
+                    let value = target.value.replace(/\D/g, '') // remove tudo que não é número
+
+                    if (value.length >= 5) {
+                      value = `${value.slice(0, 2)}-${value.slice(2, 4)}-${value.slice(4, 8)}`
+                    } else if (value.length >= 3) {
+                      value = `${value.slice(0, 2)}-${value.slice(2, 4)}`
+                    }
+
+                    target.value = value
+                  }}
+                  // className="w-full rounded-lg border disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 disabled:bg-gray-100 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  dateFormat="MM-dd-yyyy"
+                  placeholderText="MM-DD-YYYY"
                 />
 
                 {errors?.date && (
@@ -217,12 +281,9 @@ export default function Booking() {
                   </p>
                 )}
               </div>
-            </div>
 
-            {/* Service, Time, Professional */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Service */}
               <div>
-                {/* Service */}
                 <GroupSelect
                   description="Service"
                   services={services}
@@ -251,26 +312,6 @@ export default function Booking() {
                 {errors?.time && (
                   <p className="text-danger font-semibold text-xs">
                     {errors.time.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Professional */}
-              <div>
-                <Select
-                  description="Professional"
-                  data={professionals?.map(item => ({
-                    value: item?.barberId,
-                    label: item?.name,
-                  }))}
-                  selected={selectedBarber}
-                  setSelected={setSelectedBarber}
-                  {...register('barber')}
-                  error={!!errors.barber}
-                />
-                {errors?.barber && (
-                  <p className="text-danger font-semibold text-xs">
-                    {errors.barber.message}
                   </p>
                 )}
               </div>

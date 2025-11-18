@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import type React from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 
+import Chat from '@/components/layout/Chat'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 
@@ -17,6 +18,7 @@ export default function Pricing() {
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         <Toast />
+        <Chat />
         {/* Body */}
         <div className="flex flex-col px-6 gap-8 md:gap-12 py-10">
           <Banner showNavigation page="Pricing" />

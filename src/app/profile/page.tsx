@@ -182,7 +182,7 @@ export default function Profile() {
                   }}
                   placeholder="Enter your name"
                   data-error={!!errors?.name}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.name && (
@@ -203,6 +203,7 @@ export default function Profile() {
                 <DatePicker
                   id="birthDate"
                   locale="enUS"
+                  maxDate={new Date()}
                   selected={new Date(birthDate || new Date())}
                   {...register('birthDate')}
                   onChange={date => {
@@ -241,7 +242,7 @@ export default function Profile() {
 
                     target.value = value
                   }}
-                  className="w-full rounded-lg border border-gray-300 disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
+                  className="w-full rounded-lg border disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
                   dateFormat="MM-dd-yyyy"
                   placeholderText="MM-DD-YYYY"
                 />
@@ -281,7 +282,7 @@ export default function Profile() {
                   }}
                   maxLength={17}
                   data-error={errors?.phone}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.phone && (
@@ -311,7 +312,7 @@ export default function Profile() {
                     setValue('email', val, { shouldValidate: true })
                   }}
                   data-error={!!errors?.email}
-                  className="w-full rounded-lg border border-gray-300 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                 />
 
                 {errors?.email && (
@@ -339,7 +340,7 @@ export default function Profile() {
                   }
                   {...register('createdAt')}
                   onChange={() => {}}
-                  className="w-full rounded-lg border border-gray-300 disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
+                  className="w-full rounded-lg border disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
                   dateFormat="MM-dd-yyyy"
                   placeholderText="Pick a date"
                 />
