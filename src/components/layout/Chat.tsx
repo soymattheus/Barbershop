@@ -42,7 +42,7 @@ export default function Chat() {
 
   return (
     <div
-      className={`${user?.token ? 'fixed' : 'hidden'} bottom-6 right-6 w-3xs`}
+      className={`${user?.token ? 'fixed' : 'hidden'} bottom-6 right-6 w-3xs z-50`}
     >
       {!isOpen ? (
         <div className="fixed bottom-6 right-6 z-50">
@@ -55,7 +55,30 @@ export default function Chat() {
           </Button>
         </div>
       ) : (
-        <div className="fixed bottom-0 right-0 inset-0 sm:inset-auto sm:bottom-6 sm:right-6 w-full h-full sm:w-80 sm:h-8/12 sm:max-h-8/12 bg-white shadow-xl rounded-none md:rounded-lg border border-primary flex flex-col overflow-hidden z-50">
+        <div
+          className="
+          fixed
+          bottom-0
+          right-0
+          inset-0
+          w-full 
+          h-12/12 
+          bg-white
+          shadow-xl 
+          rounded-none 
+          md:inset-auto 
+          md:bottom-6 
+          md:right-6 
+          md:w-80 
+          md:h-8/12 
+          md:max-h-8/12 
+          md:rounded-lg 
+          border 
+          border-primary 
+          flex 
+          flex-col 
+          overflow-hidden"
+        >
           {/* Header */}
           <div className="flex items-center justify-between bg-primary/90 p-3">
             <h2 className="text-sm font-semibold text-white">

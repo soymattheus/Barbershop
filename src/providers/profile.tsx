@@ -22,7 +22,7 @@ type ProfileContextType = {
   handleCloseModal: () => void
   handleFetchUserData: () => void
   birthDate: string | null
-  setBirthDate: React.Dispatch<React.SetStateAction<string | null>>
+  setBirthDate: React.Dispatch<React.SetStateAction<string>>
   phone: string
   setPhone: React.Dispatch<React.SetStateAction<string>>
   email: string
@@ -37,7 +37,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined)
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const { handleFetchLocaleUserData, setIsloading } = useAuth()
   const [modalIsOpen, setModalIsOpen] = React.useState<boolean>(false)
-  const [birthDate, setBirthDate] = useState<string | null>(null)
+  const [birthDate, setBirthDate] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [name, setName] = useState<string>('')
@@ -62,7 +62,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         setEmail(userData.email)
       } else {
         setName('')
-        setBirthDate(null)
+        setBirthDate('')
         setPhone('')
         setEmail('')
       }

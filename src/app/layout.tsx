@@ -34,7 +34,7 @@ export default function RootLayout({
         <main className="mx-auto flex">
           <AppProvider>
             {children}
-            <Chat />
+            {/* <Chat /> */}
           </AppProvider>
         </main>
       </body>

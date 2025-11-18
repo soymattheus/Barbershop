@@ -4,12 +4,15 @@ import AuthLayout from '@/components/layout/authLayout'
 import Banner from '@/components/layout/banner'
 import Table from '@/components/layout/table'
 import { Button } from '@/components/ui/button'
-import React, { useEffect } from 'react'
+import { enUS } from 'date-fns/locale/en-US'
+import { type KeyboardEvent, type MouseEvent, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
+import { registerLocale, setDefaultLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import Chat from '@/components/layout/Chat'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 import { useBooking } from '@/providers/booking'
@@ -67,6 +70,7 @@ const profileSchema = z.object({
 type ProfileSchema = z.infer<typeof profileSchema>
 
 export default function Profile() {
+  registerLocale('enUS', enUS)
   const router = useRouter()
   const { user } = useAuth()
   const {
@@ -125,6 +129,7 @@ export default function Profile() {
     <div className="flex flex-col w-full bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <AuthLayout>
         <Toast />
+        <Chat />
         {/* Body */}
         <div className="flex flex-col px-6 gap-4 md:gap-10">
           <Banner showNavigation page="Profile" />
@@ -157,6 +162,7 @@ export default function Profile() {
           >
             {/* Name and date */}
             <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
+              {/* Name */}
               <div className="flex flex-col w-full md:w-3/7 gap-2">
                 <label
                   htmlFor="name"
@@ -186,30 +192,58 @@ export default function Profile() {
                 )}
               </div>
 
+              {/* Birth Date */}
               <div className="flex flex-col w-full md:w-3/7 gap-2">
                 <label
-                  htmlFor="date"
+                  htmlFor="birthDate"
                   className="text-sm font-semibold text-text"
                 >
                   Birth Date
                 </label>
-
-                <input
-                  type="date"
+                <DatePicker
                   id="birthDate"
-                  value={birthDate || new Date()?.toISOString()?.split('T')[0]}
-                  onChange={e => {
-                    setBirthDate(e?.target?.value)
-                    setValue('birthDate', new Date(e?.target?.value), {
-                      shouldValidate: true,
-                    })
+                  locale="enUS"
+                  selected={new Date(birthDate || new Date())}
+                  {...register('birthDate')}
+                  onChange={date => {
+                    setBirthDate(
+                      date?.toISOString().split('T')[0] ||
+                        new Date().toISOString().split('T')[0]
+                    )
+                    setValue(
+                      'birthDate',
+                      new Date(
+                        date?.toISOString().split('T')[0] ||
+                          new Date().toISOString().split('T')[0]
+                      ),
+                      {
+                        shouldValidate: true,
+                      }
+                    )
                   }}
-                  placeholder="MM-DD-YYYY"
-                  min="1900-01-01"
-                  max={new Date()?.toISOString()?.split('T')[0]}
-                  autoComplete="off"
-                  data-error={!!errors?.birthDate}
-                  className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  onChangeRaw={(
+                    e?:
+                      | MouseEvent<HTMLElement>
+                      | KeyboardEvent<HTMLElement>
+                      | undefined
+                  ) => {
+                    const target = e?.target as HTMLInputElement | undefined
+                    if (!target?.value) {
+                      return
+                    }
+                    let value = target.value.replace(/\D/g, '') // remove tudo que não é número
+
+                    if (value.length >= 5) {
+                      value = `${value.slice(0, 2)}-${value.slice(2, 4)}-${value.slice(4, 8)}`
+                    } else if (value.length >= 3) {
+                      value = `${value.slice(0, 2)}-${value.slice(2, 4)}`
+                    }
+
+                    target.value = value
+                  }}
+                  className="w-full rounded-lg border border-gray-300 disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
+                  dateFormat="MM-dd-yyyy"
+                  placeholderText="MM-DD-YYYY"
                 />
 
                 {errors?.birthDate && (
@@ -220,8 +254,9 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Cell phone and email */}
+            {/* Cell phone, email and customer since */}
             <div className="flex flex-wrap w-full justify-evenly md:flex-row gap-4">
+              {/* Phone */}
               <div className="flex flex-col w-full md:w-3/7 gap-2">
                 <label
                   htmlFor="phone"
@@ -256,6 +291,7 @@ export default function Profile() {
                 )}
               </div>
 
+              {/* E-mail */}
               <div className="flex flex-col w-full md:w-3/7 gap-2">
                 <label
                   htmlFor="email"
@@ -285,6 +321,7 @@ export default function Profile() {
                 )}
               </div>
 
+              {/* Customer since */}
               <div className="flex flex-col w-full md:w-3/7 gap-2">
                 <label
                   htmlFor="createdAt"
@@ -302,8 +339,8 @@ export default function Profile() {
                   }
                   {...register('createdAt')}
                   onChange={() => {}}
-                  className="w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  dateFormat="MMMM d, yyyy"
+                  className="w-full rounded-lg border border-gray-300 disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
+                  dateFormat="MM-dd-yyyy"
                   placeholderText="Pick a date"
                 />
 
