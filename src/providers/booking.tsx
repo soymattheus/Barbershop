@@ -51,6 +51,9 @@ type BookingContextType = {
   ) => Promise<void>
   availableDates: Date[]
   handleFetchAvailableDates: (idBarber: string) => Promise<void>
+  setTime: React.Dispatch<
+    React.SetStateAction<{ value: string; label: string }[]>
+  >
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -169,7 +172,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         // const date = selectedDate.toISOString().split('T')[0]
         const response = await fetch(
           `${apiUrl}/booking/query-times/${_date}/${idBarber}`,
-          // `${apiUrl}/booking/query-times/2025-11-19/d7a1f13a-5b32-4f68-8d7a-1c9e4a4f4f01`,
           {
             method: 'GET',
             headers: {
@@ -429,6 +431,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         handleUpdateBoogkindStatus,
         availableDates,
         handleFetchAvailableDates,
+        setTime,
       }}
     >
       {children}

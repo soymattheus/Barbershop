@@ -88,6 +88,7 @@ export default function Booking() {
     responseBookingData,
     availableDates,
     handleFetchAvailableDates,
+    setTime,
   } = useBooking()
   const {
     register,
@@ -205,6 +206,7 @@ export default function Booking() {
                   selected={selectedBarber}
                   setSelected={e => {
                     setSelectedBarber(e)
+                    setTime([])
                     handleFetchAvailableDates(e)
                   }}
                   {...register('barber')}
