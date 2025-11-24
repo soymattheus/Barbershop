@@ -2,7 +2,7 @@ export interface BookingData {
   bookingId: string
   userId: string
   barberName: string
-  date: string | null
+  date: string
   time: string
   service: string
   price: string
@@ -13,7 +13,7 @@ export interface ResponseBookingData {
   userName: string
   userId: string
   barberName: string
-  date: string | null
+  date: string
   time: string
   service: string
 }

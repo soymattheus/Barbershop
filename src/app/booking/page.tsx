@@ -11,6 +11,8 @@ import Select from '@/components/ui/select'
 // import React, { useEffect } from 'react'
 import { type KeyboardEvent, type MouseEvent, useEffect } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
+import { enUS } from 'date-fns/locale/en-US'
+import { registerLocale } from 'react-datepicker'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -60,6 +62,7 @@ const bookingSchema = z.object({
 type BookingSchema = z.infer<typeof bookingSchema>
 
 export default function Booking() {
+  registerLocale('enUS', enUS)
   const router = useRouter()
   const { user } = useAuth()
   const {
@@ -83,6 +86,8 @@ export default function Booking() {
     handleFetchServices,
     handleFetchAvaliableTimes,
     responseBookingData,
+    availableDates,
+    handleFetchAvailableDates,
   } = useBooking()
   const {
     register,
@@ -103,9 +108,7 @@ export default function Booking() {
   useEffect(() => {
     setValue('name', user?.user?.name || '')
     setValue('date', selectedDate ? new Date(selectedDate) : new Date())
-    setSelectedDate(
-      selectedDate ? selectedDate : new Date().toISOString().split('T')[0]
-    )
+    setSelectedDate(selectedDate ? selectedDate : new Date())
     setValue('barber', selectedBarber)
     setValue('service', selectedService)
     setValue('time', selectedTime)
@@ -123,12 +126,12 @@ export default function Booking() {
     handleFetchBookingData()
     handleFetchBarbers()
     handleFetchServices()
-    handleFetchAvaliableTimes()
+    // handleFetchAvaliableTimes()
   }, [
     handleFetchBookingData,
     handleFetchBarbers,
     handleFetchServices,
-    handleFetchAvaliableTimes,
+    // handleFetchAvaliableTimes,
   ])
 
   const handleBook = () => {
@@ -200,7 +203,10 @@ export default function Booking() {
                     label: item?.name,
                   }))}
                   selected={selectedBarber}
-                  setSelected={setSelectedBarber}
+                  setSelected={e => {
+                    setSelectedBarber(e)
+                    handleFetchAvailableDates(e)
+                  }}
                   {...register('barber')}
                   error={!!errors.barber}
                 />
@@ -225,28 +231,18 @@ export default function Booking() {
                 <DatePicker
                   id="date"
                   locale="enUS"
-                  minDate={new Date()}
-                  // disabled={!selectedBarber}
-                  // includeDates={[
-                  //   new Date('2025-12-25'), // Christmas Day
-                  //   new Date('2026-01-01'), // New Year's Day
-                  // ]}
-                  selected={new Date(selectedDate || new Date('2025-12-25'))}
+                  disabled={!selectedBarber || availableDates.length === 0}
+                  includeDates={availableDates}
+                  selected={new Date(selectedDate || availableDates[0])}
                   {...register('date')}
                   onChange={date => {
-                    setSelectedDate(
-                      date?.toISOString().split('T')[0] ||
-                        new Date().toISOString().split('T')[0]
-                    )
-                    setValue(
-                      'date',
-                      new Date(
-                        date?.toISOString().split('T')[0] ||
-                          new Date().toISOString().split('T')[0]
-                      ),
-                      {
-                        shouldValidate: true,
-                      }
+                    setSelectedDate(date || new Date())
+                    setValue('date', new Date(date || new Date()), {
+                      shouldValidate: true,
+                    })
+                    handleFetchAvaliableTimes(
+                      selectedBarber,
+                      date || new Date()
                     )
                   }}
                   onChangeRaw={(
@@ -269,7 +265,6 @@ export default function Booking() {
 
                     target.value = value
                   }}
-                  // className="w-full rounded-lg border disabled:bg-gray-100 text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-primary z-0"
                   className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 disabled:bg-gray-100 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
                   dateFormat="MM-dd-yyyy"
                   placeholderText="MM-DD-YYYY"
@@ -282,26 +277,10 @@ export default function Booking() {
                 )}
               </div>
 
-              {/* Service */}
-              <div>
-                <GroupSelect
-                  description="Service"
-                  services={services}
-                  selected={selectedService}
-                  setSelected={setSelectedService}
-                  {...register('service')}
-                  error={!!errors.service}
-                />
-                {errors?.service && (
-                  <p className="text-danger font-semibold text-xs">
-                    {errors.service.message}
-                  </p>
-                )}
-              </div>
-
               {/* Time */}
               <div>
                 <Select
+                  disabled={!selectedBarber || availableDates.length === 0}
                   description="Time"
                   data={time}
                   selected={selectedTime}
@@ -312,6 +291,24 @@ export default function Booking() {
                 {errors?.time && (
                   <p className="text-danger font-semibold text-xs">
                     {errors.time.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Service */}
+              <div>
+                <GroupSelect
+                  disabled={!selectedTime || availableDates.length === 0}
+                  description="Service"
+                  services={services}
+                  selected={selectedService}
+                  setSelected={setSelectedService}
+                  {...register('service')}
+                  error={!!errors.service}
+                />
+                {errors?.service && (
+                  <p className="text-danger font-semibold text-xs">
+                    {errors.service.message}
                   </p>
                 )}
               </div>

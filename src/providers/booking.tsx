@@ -11,6 +11,7 @@ import React, {
   useEffect,
   type ReactNode,
   useCallback,
+  use,
 } from 'react'
 import { toast } from 'react-toastify'
 
@@ -22,8 +23,8 @@ type BookingContextType = {
   professionals: Barber[]
   services: ServiceGroup[]
   time: { value: string; label: string }[]
-  selectedDate: string | null
-  setSelectedDate: React.Dispatch<React.SetStateAction<string | null>>
+  selectedDate: Date
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date>>
   selectedService: string
   setSelectedService: React.Dispatch<React.SetStateAction<string>>
   selectedTime: string
@@ -43,11 +44,13 @@ type BookingContextType = {
   responseBookingData: ResponseBookingData | undefined
   handleFetchBarbers: () => Promise<void>
   handleFetchServices: () => Promise<void>
-  handleFetchAvaliableTimes: () => Promise<void>
+  handleFetchAvaliableTimes: (idBarber: string, date: Date) => Promise<void>
   handleUpdateBoogkindStatus: (
     bookingId: string,
     status: string
   ) => Promise<void>
+  availableDates: Date[]
+  handleFetchAvailableDates: (idBarber: string) => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -57,9 +60,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const [professionals, setProfessionals] = useState<Barber[]>([])
   const [services, setServices] = useState<ServiceGroup[]>([])
   const [time, setTime] = useState<{ value: string; label: string }[]>([])
-  const [selectedDate, setSelectedDate] = React.useState<string | null>(
-    new Date().toISOString().split('T')[0]
-  )
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date())
   const [selectedService, setSelectedService] = React.useState<string>('')
   const [selectedTime, setSelectedTime] = React.useState<string>('')
   const [selectedBarber, setSelectedBarber] = React.useState<string>('')
@@ -70,6 +71,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const [responseBookingData, setResponseBookingData] = useState<
     ResponseBookingData | undefined
   >()
+  const [availableDates, setAvailableDates] = useState<Date[]>([])
 
   const handleFetchBarbers = useCallback(async () => {
     try {
@@ -108,33 +110,107 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
-  const handleFetchAvaliableTimes = useCallback(async () => {
-    try {
-      const time = [
-        { label: '9:00 AM', value: '09:00' },
-        { label: '9:30 AM', value: '09:30' },
-        { label: '10:00 AM', value: '10:00' },
-        { label: '10:30 AM', value: '10:30' },
-        { label: '11:00 AM', value: '11:00' },
-        { label: '11:30 AM', value: '11:30' },
-        { label: '12:00 PM', value: '12:00' },
-        { label: '12:30 PM', value: '12:30' },
-        { label: '1:00 PM', value: '13:00' },
-        { label: '1:30 PM', value: '13:30' },
-        { label: '2:00 PM', value: '14:00' },
-        { label: '2:30 PM', value: '14:30' },
-        { label: '3:00 PM', value: '15:00' },
-        { label: '3:30 PM', value: '15:30' },
-        { label: '4:00 PM', value: '16:00' },
-        { label: '4:30 PM', value: '16:30' },
-        { label: '5:00 PM', value: '17:00' },
-        { label: '5:30 PM', value: '17:30' },
-      ]
-      setTime(time)
-    } catch (error) {
-      console.error('Error fetching time:', error)
-    }
-  }, [])
+  const handleFetchAvailableDates = useCallback(
+    async (idBarber: string) => {
+      try {
+        setIsloading(true)
+        const response = await fetch(
+          `${apiUrl}/booking/query-dates/${idBarber}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${Cookies.get('token')}`,
+            },
+          }
+        )
+        setIsloading(false)
+
+        if (response.status !== 200) {
+          // Handle error response
+          if (response.status === 401) {
+            toast.error('Unauthorized, please login again')
+            return
+          }
+          if (response.status === 500) {
+            toast.error('Server error, please try again later')
+            return
+          }
+          if (response.status === 400) {
+            const responseData = await response.json()
+            if (responseData?.message) {
+              toast.error(responseData.message)
+              return
+            }
+          }
+        }
+
+        if (response.status === 200) {
+          const dates = await response.json()
+          if (dates?.dates?.length > 0) {
+            setSelectedDate(dates?.dates[0]?.date)
+            handleFetchAvaliableTimes(idBarber, dates?.dates[0]?.date)
+          }
+          setAvailableDates(
+            dates.dates.map((date: { date: Date }) => date?.date)
+          )
+        }
+      } catch (error) {
+        console.error('Error fetching professionals:', error)
+      }
+    },
+    [setIsloading]
+  )
+
+  const handleFetchAvaliableTimes = useCallback(
+    async (idBarber: string, date: Date) => {
+      console.log(new Date(date).toISOString().split('T')[0])
+      const _date = new Date(date).toISOString().split('T')[0]
+      try {
+        // const date = selectedDate.toISOString().split('T')[0]
+        const response = await fetch(
+          `${apiUrl}/booking/query-times/${_date}/${idBarber}`,
+          // `${apiUrl}/booking/query-times/2025-11-19/d7a1f13a-5b32-4f68-8d7a-1c9e4a4f4f01`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${Cookies.get('token')}`,
+            },
+          }
+        )
+
+        if (response.status !== 200) {
+          // Handle error response
+          if (response.status === 401) {
+            toast.error('Unauthorized, please login again')
+            return
+          }
+          if (response.status === 500) {
+            toast.error('Server error, please try again later')
+            return
+          }
+          if (response.status === 400) {
+            const responseData = await response.json()
+            if (responseData?.message) {
+              toast.error(responseData.message)
+              return
+            }
+          }
+        }
+
+        if (response.status === 200) {
+          const times = await response.json()
+          setTime(
+            times.times?.map((time: { id_booking: string; time: string }) => {
+              return { label: time.time, value: time.id_booking }
+            })
+          )
+        }
+      } catch (error) {
+        console.error('Error fetching time:', error)
+      }
+    },
+    []
+  )
 
   const handleFetchServices = useCallback(async () => {
     try {
@@ -155,7 +231,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const handleCloseModal = () => {
     handleFetchBookingData()
     setModalIsOpen(false)
-    setSelectedDate(new Date().toISOString().split('T')[0])
+    setSelectedDate(new Date())
     setSelectedService('')
     setSelectedTime('')
     setSelectedBarber('')
@@ -176,11 +252,8 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     const date = selectedDate ? new Date(selectedDate) : new Date()
 
     const bookingData = {
-      date: date.toISOString().split('T')[0],
-      time: selectedTime,
+      bookingId: selectedTime,
       serviceId: selectedService,
-      barberId: selectedBarber,
-      paymentType: paymentType,
       nrPrice: nrPrice,
     }
 
@@ -284,13 +357,14 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         return
       }
 
-      const response = await fetch(`${apiUrl}/booking/update/${userId}`, {
+      setIsloading(true)
+      const response = await fetch(`${apiUrl}/booking/cancel/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
-        body: JSON.stringify({ status, bookingId }),
+        body: JSON.stringify({ bookingId }),
       })
 
       if (response.status !== 200) {
@@ -314,8 +388,10 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.status === 200) {
         toast.success('Booking status updated successfully!')
-        handleFetchBookingData()
+        await handleFetchBookingData()
       }
+
+      setIsloading(false)
     } catch (error) {
       console.error('Error updating booking status:', error)
       toast.error('Error updating booking status. Please try again.')
@@ -351,6 +427,8 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         handleFetchAvaliableTimes,
         responseBookingData,
         handleUpdateBoogkindStatus,
+        availableDates,
+        handleFetchAvailableDates,
       }}
     >
       {children}

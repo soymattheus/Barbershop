@@ -9,6 +9,7 @@ interface GroupSelectProps {
   selected: string
   setSelected: (value: string) => void
   error?: boolean
+  disabled?: boolean
 }
 
 export default function GroupSelect({
@@ -17,6 +18,7 @@ export default function GroupSelect({
   selected,
   setSelected,
   error,
+  disabled = false,
 }: GroupSelectProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -24,13 +26,14 @@ export default function GroupSelect({
         Choose a {description}
       </label>
       <select
+        disabled={disabled}
         id="service"
         value={selected}
         onChange={e => {
           setSelected(e.target.value)
         }}
         data-error={error}
-        className="w-full rounded-lg border text-gray-700 p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
+        className="w-full rounded-lg border text-gray-700 p-3 disabled:bg-gray-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary data-[error=true]:border-danger data-[error=true]:text-danger"
       >
         <option value="" disabled>
           -- Select a {description.toLowerCase()} --

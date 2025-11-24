@@ -46,15 +46,17 @@ export default function Table({ bookingData }: TableProps) {
                     className="border-b hover:bg-gray-100"
                   >
                     <td className="px-4 py-2 text-text">
-                      {appointment?.date
-                        ? new Date(
-                            `${appointment?.date}T23:00:00Z`
-                          ).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })
-                        : ''}
+                      {
+                        new Date(appointment?.date).toISOString().split('T')[0]
+                        // ? new Date(
+                        //     `${appointment?.date}T23:00:00Z`
+                        //   ).toLocaleDateString('en-US', {
+                        //     year: 'numeric',
+                        //     month: '2-digit',
+                        //     day: '2-digit',
+                        //   })
+                        // : ''
+                      }
                     </td>
                     <td className="px-4 py-2 text-text">
                       {appointment?.time || ''}
