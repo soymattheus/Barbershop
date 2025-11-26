@@ -20,6 +20,7 @@ import { z } from 'zod'
 
 import Chat from '@/components/layout/Chat'
 import GroupSelect from '@/components/ui/groupSelect'
+import MercadoPagoButton from '@/components/ui/mercadoPagoButton'
 import Toast from '@/components/ui/toast'
 import { useAuth } from '@/hooks/auth'
 import { useBooking } from '@/providers/booking'
@@ -89,6 +90,9 @@ export default function Booking() {
     availableDates,
     handleFetchAvailableDates,
     setTime,
+    handleSelectService,
+    preferenceResponse,
+    handleGenerateOrder,
   } = useBooking()
   const {
     register,
@@ -135,8 +139,9 @@ export default function Booking() {
     // handleFetchAvaliableTimes,
   ])
 
-  const handleBook = () => {
-    handleBookAppointment()
+  const handleBook = async () => {
+    await handleBookAppointment()
+    await handleGenerateOrder()
   }
 
   return (
@@ -304,7 +309,7 @@ export default function Booking() {
                   description="Service"
                   services={services}
                   selected={selectedService}
-                  setSelected={setSelectedService}
+                  setSelected={handleSelectService}
                   {...register('service')}
                   error={!!errors.service}
                 />
@@ -374,9 +379,14 @@ export default function Booking() {
               Delays of up to 15 minutes will be tolerated.
             </p>
             <p className="italic text-gray-500">
-              If you are a customer of one of our plans, failure to appear will
-              be considered as an exercise of your right to cut.
+              Proceed to payment using the button below. If your payment is not
+              identified within 30 minutes, your appointment will be
+              automatically cancelled.
             </p>
+          </div>
+
+          <div className="flex w-full justify-center">
+            <MercadoPagoButton preferenceId={preferenceResponse?.id || ''} />
           </div>
         </Modal>
       </AuthLayout>

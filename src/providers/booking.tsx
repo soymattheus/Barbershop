@@ -2,7 +2,7 @@
 
 import type { Barber } from '@/types/barber'
 import type { BookingData, ResponseBookingData } from '@/types/booking'
-import type { ServiceGroup } from '@/types/service'
+import type { Service, ServiceGroup } from '@/types/service'
 import Cookies from 'js-cookie'
 import React, {
   createContext,
@@ -16,6 +16,7 @@ import React, {
 import { toast } from 'react-toastify'
 
 import { useAuth } from '@/hooks/auth'
+import type { Type } from 'typescript'
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
@@ -54,6 +55,9 @@ type BookingContextType = {
   setTime: React.Dispatch<
     React.SetStateAction<{ value: string; label: string }[]>
   >
+  handleSelectService: (serviceId: string) => void
+  preferenceResponse: { id: string } | null
+  handleGenerateOrder: () => Promise<void>
 }
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined)
@@ -75,6 +79,11 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     ResponseBookingData | undefined
   >()
   const [availableDates, setAvailableDates] = useState<Date[]>([])
+  const [selectedServiseDetails, setSelectedServiceDetails] =
+    useState<Service>()
+  const [preferenceResponse, setPreferenceResponse] = useState<{
+    id: string
+  } | null>(null)
 
   const handleFetchBarbers = useCallback(async () => {
     try {
@@ -240,6 +249,17 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     setResponseBookingData(undefined)
   }
 
+  const handleSelectService = (serviceId: string) => {
+    setSelectedService(serviceId)
+    const service = services
+      .flatMap(serviceGroup => serviceGroup.services)
+      .find(service => service.serviceId === serviceId)
+
+    console.log(service)
+    setSelectedServiceDetails(service)
+    setNrPrice(service ? service.price : 0)
+  }
+
   const handleBookAppointment = async () => {
     setIsloading(true)
     const userCookies = Cookies.get('user')
@@ -250,8 +270,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 
     const userLoggedJson = JSON.parse(userCookies)
     const userId = userLoggedJson?.id
-
-    const date = selectedDate ? new Date(selectedDate) : new Date()
 
     const bookingData = {
       bookingId: selectedTime,
@@ -290,8 +308,69 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.status === 200) {
         setResponseBookingData(await response.json())
-        handleOpenModal()
         toast.success('Booking successful!')
+        setIsloading(false)
+      }
+    } catch (error) {
+      setIsloading(false)
+      toast.error('Error saving booking data. Please try again.')
+    }
+  }
+
+  const handleGenerateOrder = async () => {
+    setIsloading(true)
+    const userCookies = Cookies.get('user')
+    if (!userCookies) {
+      toast.error('Please log in to book an appointment.')
+      return
+    }
+
+    const userLoggedJson = JSON.parse(userCookies)
+    const userId = userLoggedJson?.id
+
+    const orderData = [
+      {
+        title: selectedServiseDetails?.name || '',
+        description: selectedServiseDetails?.description || '',
+        currency_id: 'BRL',
+        quantity: 1,
+        unit_price: selectedServiseDetails?.price || 0,
+      },
+    ]
+
+    try {
+      const response = await fetch(`${apiUrl}/mercado-pago/order/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify(orderData),
+      })
+      if (response.status !== 201) {
+        setIsloading(false)
+        // Handle error response
+        if (response.status === 401) {
+          toast.error('Unauthorized, please login again')
+          return
+        }
+        if (response.status === 500) {
+          toast.error('Server error, please try again later')
+          return
+        }
+        if (response.status === 400) {
+          const responseData = await response.json()
+          if (responseData?.message) {
+            toast.error(responseData.message)
+            return
+          }
+        }
+      }
+
+      if (response.status === 200) {
+        const resp = await response.json()
+        setPreferenceResponse(resp)
+        handleOpenModal()
         setIsloading(false)
       }
     } catch (error) {
@@ -432,6 +511,9 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         availableDates,
         handleFetchAvailableDates,
         setTime,
+        handleSelectService,
+        preferenceResponse,
+        handleGenerateOrder,
       }}
     >
       {children}

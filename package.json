@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.1",
+    "@mercadopago/sdk-react": "^1.0.6",
     "@storybook/addon-actions": "^9.0.8",
     "@tailwindcss/postcss": "^4.0.7",
     "date-fns": "^4.1.0",
