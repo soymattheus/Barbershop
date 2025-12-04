@@ -1,6 +1,7 @@
 'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 import { useRef } from 'react'
 
 const technologies = [
@@ -185,7 +186,7 @@ const HorizontalScroll = () => {
             className="flex flex-col items-center px-2 flex-shrink-0 w-1/2 md:w-1/12"
             style={{ scrollSnapAlign: 'start' }}
           >
-            <img src={tech.icon} alt={tech.name} className="size-20" />
+            <Image src={tech.icon} alt={tech.name} className="size-20" />
             <p className="text-center text-white mt-2">{tech.name}</p>
           </div>
         ))}

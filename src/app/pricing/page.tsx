@@ -63,7 +63,7 @@ export default function Pricing() {
               </p>
               <div className="bg-white shadow-xl border border-gray-200 rounded-xl gap-4 p-6 flex flex-col h-full">
                 <p className="text-primary font-bold text-2xl leading-none font-heading text-center">
-                  💈 Gentleman's Choice
+                  💈 Gentleman&lsquo;s Choice
                 </p>
                 <p className="text-gray-500 text-center">$159.99/6 months</p>
                 <p className="text-text italic text-center">

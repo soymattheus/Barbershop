@@ -8,6 +8,7 @@ import React, {
   useState,
   useEffect,
   type ReactNode,
+  useCallback,
 } from 'react'
 
 import type { User } from '@/types/user'
@@ -31,7 +32,7 @@ type AuthContextType = {
       confirmPassword: string
     }>
   ) => Promise<void>
-  handleFetchLocaleUserData: () => Promise<void>
+  handleFetchLocaleUserData: () => void
   handleSetLoyaltyPackage: (loyaltyPack: string) => Promise<void>
   isLoading: boolean
   setIsloading: (state: boolean) => void
@@ -53,6 +54,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsloading] = useState<boolean>(false)
 
+  const handleFetchLocaleUserData = useCallback(() => {
+    ;async () => {
+      const userString = Cookies.get('user')
+      const userData = userString ? JSON.parse(userString) : null
+      if (userData) {
+        setUser({
+          token: Cookies.get('token') || '',
+          user: userData,
+        })
+      }
+    }
+  }, [])
+
   useEffect(() => {
     const token = Cookies.get('token')
     const userData = Cookies.get('user')
@@ -60,18 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token && userData) {
       handleFetchLocaleUserData()
     }
-  }, [])
-
-  const handleFetchLocaleUserData = async () => {
-    const userString = Cookies.get('user')
-    const userData = userString ? JSON.parse(userString) : null
-    if (userData) {
-      setUser({
-        token: Cookies.get('token') || '',
-        user: userData,
-      })
-    }
-  }
+  }, [handleFetchLocaleUserData])
 
   const handleLogin = async (email: string, password: string) => {
     try {

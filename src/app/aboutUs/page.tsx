@@ -2,6 +2,7 @@ import Chat from '@/components/layout/Chat'
 import AuthLayout from '@/components/layout/authLayout'
 import Contact from '@/components/layout/contact'
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
+import Image from 'next/image'
 
 const barbers = [
   {
@@ -73,7 +74,7 @@ export default function AboutUs() {
               </h2>
               <p>
                 Premium products, personalized service, and a vibe that makes
-                you feel right at home — that’s the Barrio Barber's way.
+                you feel right at home — that’s the Barrio Barber&lsquo;s way.
               </p>
             </div>
           </div>
@@ -90,9 +91,11 @@ export default function AboutUs() {
                   key={i?.id}
                   className="flex flex-col items-center bg-white shadow rounded p-4"
                 >
-                  <img
+                  <Image
                     src={i?.img}
                     alt={`Barber ${i?.name}`}
+                    width={96}
+                    height={96}
                     className="w-24 h-24 rounded-full object-cover mb-2"
                   />
                   <p className="font-semibold text-lg">{i?.name}</p>

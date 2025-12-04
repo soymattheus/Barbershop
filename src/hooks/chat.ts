@@ -26,7 +26,7 @@ export default function useChat(room: string) {
   }, [room])
 
   useEffect(() => {
-    handleGetMessages()
+    // handleGetMessages()
     const socket = io(`${apiUrl}`)
 
     socket.emit('join_room', { room })
@@ -41,7 +41,7 @@ export default function useChat(room: string) {
       socket.emit('leave_room', { room })
       socket.disconnect()
     }
-  }, [room, handleGetMessages])
+  }, [room])
 
-  return { messages }
+  return { messages, handleGetMessages }
 }

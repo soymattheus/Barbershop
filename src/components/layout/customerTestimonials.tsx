@@ -22,9 +22,9 @@ export default function CustomerTestimonials() {
           <div className="flex flex-col gap-3 p-4 text-text">
             <p className="text-sm md:text-base leading-relaxed">
               “Hands down the best barbershop in town! Top-notch service, super
-              chill atmosphere, and barbers who really know what they're doing.
-              I walked out feeling fresh and confident. This place is my go-to
-              from now on!”
+              chill atmosphere, and barbers who really know what they&lsquo;re
+              doing. I walked out feeling fresh and confident. This place is my
+              go-to from now on!”
             </p>
             <p className="font-bold italic self-end text-sm md:text-base">
               – Matheus Tavares

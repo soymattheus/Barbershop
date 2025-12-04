@@ -11,8 +11,15 @@ import { InputField, InputRoot } from '../ui/input'
 
 export default function Chat() {
   const bottomRef = useRef<HTMLDivElement | null>(null)
-  const { text, setText, isOpen, setIsOpen, messages, handleSendMessage } =
-    useChat()
+  const {
+    text,
+    setText,
+    isOpen,
+    setIsOpen,
+    messages,
+    handleSendMessage,
+    handleGetMessages,
+  } = useChat()
   const { user } = useAuth()
 
   async function handleSend() {
@@ -20,6 +27,10 @@ export default function Chat() {
     await handleSendMessage()
     setText('')
   }
+
+  useEffect(() => {
+    handleGetMessages()
+  }, [handleGetMessages])
 
   useEffect(() => {
     console.log(messages, isOpen)

@@ -23,6 +23,7 @@ type ChatContextType = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   handleSendMessage: () => Promise<void>
   messages: MessageProps[]
+  handleGetMessages: () => Promise<void>
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined)
@@ -32,7 +33,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const room = user?.user?.id || ''
   const name = user?.user?.name || ''
 
-  const { messages } = chatHook(room)
+  const { messages, handleGetMessages } = chatHook(room)
 
   const [text, setText] = useState<string>('')
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -54,6 +55,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         setIsOpen,
         handleSendMessage,
         messages,
+        handleGetMessages,
       }}
     >
       {children}

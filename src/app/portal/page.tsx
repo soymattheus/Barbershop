@@ -1,13 +1,5 @@
 import CustomerTestimonials from '@/components/layout/customerTestimonials'
 import dynamic from 'next/dynamic'
-import React from 'react'
-
-// import Chat from '@/components/layout/Chat'
-// import AuthLayout from '@/components/layout/authLayout'
-// import Banner from '@/components/layout/banner'
-// import Contact from '@/components/layout/contact'
-// import Services from '@/components/layout/services'
-
 const Chat = dynamic(() => import('@/components/layout/Chat'))
 const AuthLayout = dynamic(() => import('@/components/layout/authLayout'))
 const Banner = dynamic(() => import('@/components/layout/banner'))

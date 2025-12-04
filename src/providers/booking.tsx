@@ -122,57 +122,6 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
-  const handleFetchAvailableDates = useCallback(
-    async (idBarber: string) => {
-      try {
-        setIsloading(true)
-        const response = await fetch(
-          `${apiUrl}/booking/query-dates/${idBarber}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${Cookies.get('token')}`,
-            },
-          }
-        )
-        setIsloading(false)
-
-        if (response.status !== 200) {
-          // Handle error response
-          if (response.status === 401) {
-            toast.error('Unauthorized, please login again')
-            return
-          }
-          if (response.status === 500) {
-            toast.error('Server error, please try again later')
-            return
-          }
-          if (response.status === 400) {
-            const responseData = await response.json()
-            if (responseData?.message) {
-              toast.error(responseData.message)
-              return
-            }
-          }
-        }
-
-        if (response.status === 200) {
-          const dates = await response.json()
-          if (dates?.dates?.length > 0) {
-            setSelectedDate(dates?.dates[0]?.date)
-            handleFetchAvaliableTimes(idBarber, dates?.dates[0]?.date)
-          }
-          setAvailableDates(
-            dates.dates.map((date: { date: Date }) => date?.date)
-          )
-        }
-      } catch (error) {
-        console.error('Error fetching professionals:', error)
-      }
-    },
-    [setIsloading]
-  )
-
   const handleFetchAvaliableTimes = useCallback(
     async (idBarber: string, date: Date) => {
       console.log(new Date(date).toISOString().split('T')[0])
@@ -221,6 +170,57 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     []
+  )
+
+  const handleFetchAvailableDates = useCallback(
+    async (idBarber: string) => {
+      try {
+        setIsloading(true)
+        const response = await fetch(
+          `${apiUrl}/booking/query-dates/${idBarber}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${Cookies.get('token')}`,
+            },
+          }
+        )
+        setIsloading(false)
+
+        if (response.status !== 200) {
+          // Handle error response
+          if (response.status === 401) {
+            toast.error('Unauthorized, please login again')
+            return
+          }
+          if (response.status === 500) {
+            toast.error('Server error, please try again later')
+            return
+          }
+          if (response.status === 400) {
+            const responseData = await response.json()
+            if (responseData?.message) {
+              toast.error(responseData.message)
+              return
+            }
+          }
+        }
+
+        if (response.status === 200) {
+          const dates = await response.json()
+          if (dates?.dates?.length > 0) {
+            setSelectedDate(dates?.dates[0]?.date)
+            handleFetchAvaliableTimes(idBarber, dates?.dates[0]?.date)
+          }
+          setAvailableDates(
+            dates.dates.map((date: { date: Date }) => date?.date)
+          )
+        }
+      } catch (error) {
+        console.error('Error fetching professionals:', error)
+      }
+    },
+    [setIsloading, handleFetchAvaliableTimes]
   )
 
   const handleFetchServices = useCallback(async () => {
