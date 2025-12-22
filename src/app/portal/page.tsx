@@ -1,10 +1,21 @@
-import CustomerTestimonials from '@/components/layout/customerTestimonials'
+import { ContactSkeleton } from '@/components/loaders/contact'
+import { customerTestimonialsSkeleton } from '@/components/loaders/customerTestimonials'
+import { ServicesSkeleton } from '@/components/loaders/servicesComponent'
 import dynamic from 'next/dynamic'
+
+const CustomerTestimonials = dynamic(
+  () => import('@/components/layout/customerTestimonials'),
+  { loading: customerTestimonialsSkeleton }
+)
 const Chat = dynamic(() => import('@/components/layout/Chat'))
 const AuthLayout = dynamic(() => import('@/components/layout/authLayout'))
 const Banner = dynamic(() => import('@/components/layout/banner'))
-const Contact = dynamic(() => import('@/components/layout/contact'))
-const Services = dynamic(() => import('@/components/layout/services'))
+const Contact = dynamic(() => import('@/components/layout/contact'), {
+  loading: ContactSkeleton,
+})
+const Services = dynamic(() => import('@/components/layout/services'), {
+  loading: ServicesSkeleton,
+})
 
 export default function Home() {
   return (

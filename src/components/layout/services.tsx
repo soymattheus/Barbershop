@@ -3,53 +3,50 @@
 import React from 'react'
 import Modal from '../ui/modal'
 
-interface Service {
-  name: string
-  description: string
-  price: number
-}
-
-interface Category {
-  title: string
-  services: Service[]
-}
+import type { Service, ServiceGroup } from '@/types/service'
 
 export default function Services() {
-  const [selectedService, setSelectedService] = React.useState<Category>()
+  const [selectedService, setSelectedService] = React.useState<ServiceGroup>()
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
 
-  const services: Category[] = [
+  const services: ServiceGroup[] = [
     {
       title: 'Haircuts',
       services: [
         {
+          serviceId: '1',
           name: 'Classic Haircut',
           description: 'A traditional cut using clippers or scissors.',
           price: 25,
         },
         {
+          serviceId: '2',
           name: 'Skin Fade / Bald Fade',
           description: 'A sharp fade that goes all the way down to the skin.',
           price: 30,
         },
         {
+          serviceId: '3',
           name: 'Taper Fade',
           description:
             'A clean and subtle fade around the neckline and sideburns.',
           price: 28,
         },
         {
+          serviceId: '4',
           name: 'Scissor Cut',
           description:
             'A full haircut using only scissors for a more natural finish.',
           price: 32,
         },
         {
+          serviceId: '5',
           name: 'Kids’ Haircut',
           description: 'Fresh cuts for the little ones, styled to perfection.',
           price: 20,
         },
         {
+          serviceId: '6',
           name: 'Hair Designs / Razor Art',
           description: 'Custom lines and designs shaved in for a bold look.',
           price: 35,
@@ -60,22 +57,26 @@ export default function Services() {
       title: 'Beard Services',
       services: [
         {
+          serviceId: '7',
           name: 'Beard Trim',
           description: 'Clean up and shape your beard for a sharp finish.',
           price: 15,
         },
         {
+          serviceId: '8',
           name: 'Hot Towel Shave',
           description:
             'Traditional straight-razor shave with a relaxing hot towel.',
           price: 22,
         },
         {
+          serviceId: '9',
           name: 'Razor Line-Up / Shape-Up',
           description: 'Razor-sharp edges around the beard and hairline.',
           price: 18,
         },
         {
+          serviceId: '10',
           name: 'Beard Color',
           description:
             'Cover greys or switch up your beard tone with a custom dye.',
@@ -87,38 +88,45 @@ export default function Services() {
       title: 'Premium Add-Ons',
       services: [
         {
+          serviceId: '11',
           name: 'Eyebrow Shaping',
           description: 'Crisp, clean brows using razor or threading.',
           price: 10,
         },
         {
+          serviceId: '12',
           name: 'Hair Styling',
           description: 'Styled with pomade, gel, or spray—your look, your way.',
           price: 12,
         },
         {
+          serviceId: '13',
           name: 'Shampoo & Wash',
           description:
             'Hair wash with scalp massage and professional products.',
           price: 8,
         },
         {
+          serviceId: '14',
           name: 'Facial / Black Mask',
           description: 'Deep cleansing facial with detoxifying mask.',
           price: 15,
         },
         {
+          serviceId: '15',
           name: 'Steam Treatment',
           description: 'Opens up pores before a shave for smoother skin.',
           price: 10,
         },
         {
+          serviceId: '16',
           name: 'Scalp Massage',
           description:
             'Relaxing massage to boost circulation and chill you out.',
           price: 12,
         },
         {
+          serviceId: '17',
           name: 'Nose / Ear Waxing',
           description: 'Quick waxing for unwanted hair, clean and painless.',
           price: 10,
@@ -129,17 +137,20 @@ export default function Services() {
       title: 'Latin-Style Services',
       services: [
         {
+          serviceId: '18',
           name: 'Puerto Rican or Dominican Style Cuts',
           description:
             'Sharp fades, precise lines, and that clean Latino finish.',
           price: 30,
         },
         {
+          serviceId: '19',
           name: 'Cut & Blow Dry Combo',
           description: 'Perfect cut followed by a pro blowout.',
           price: 35,
         },
         {
+          serviceId: '20',
           name: 'The Full Service',
           description:
             'Haircut, beard, eyebrows, facial — the full experience.',
@@ -151,32 +162,38 @@ export default function Services() {
       title: 'Grooming & Self-Care',
       services: [
         {
+          serviceId: '21',
           name: 'Facial Scrub',
           description:
             'Deep exfoliation to cleanse pores and refresh your skin.',
           price: 15,
         },
         {
+          serviceId: '22',
           name: 'Hydrating Facial',
           description: 'Restores moisture and glow to dry or tired skin.',
           price: 20,
         },
         {
+          serviceId: '23',
           name: 'Scalp Detox Treatment',
           description: 'Removes buildup and promotes healthy hair growth.',
           price: 18,
         },
         {
+          serviceId: '24',
           name: 'Color Touch-Up',
           description: 'Blends in grays or refreshes faded hair color.',
           price: 25,
         },
         {
+          serviceId: '25',
           name: 'Hair Relaxer / Texturizer',
           description: 'Chemical treatment to soften curls or waves.',
           price: 30,
         },
         {
+          serviceId: '26',
           name: 'After-Cut Cologne Spray',
           description: 'Signature fragrance to finish your session right.',
           price: 5,
@@ -267,7 +284,7 @@ export default function Services() {
       >
         <ul>
           {selectedService?.services?.map((item: Service, index: number) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={item?.serviceId}>
               <li className="text-text font-bold">
                 {item?.name} - ${item?.price.toFixed(2)}
               </li>
